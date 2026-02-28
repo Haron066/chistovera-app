@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ЧистоВера Pro v4.5</title>
+    <title>ЧистоВера Pro v5.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -18,21 +18,21 @@
     <!-- HEADER -->
     <header class="bg-white sticky top-0 z-[100] border-b p-4 flex justify-between items-center shadow-sm">
         <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase">ЧИСТОВЕРА</h1>
-        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ-панель</button>
+        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ</button>
     </header>
 
     <main class="p-4">
         <!-- ВЫБОР ГОРОДА -->
         <div id="screen-city" class="hidden space-y-4 pt-10 text-center">
-            <h2 class="text-2xl font-black">Где вы живете?</h2>
-            <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all">🏙 Магас</button>
-            <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all">🏡 Назрань</button>
+            <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Ваш город?</h2>
+            <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all italic">🏙 Магас</button>
+            <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
         </div>
 
         <!-- АДРЕС -->
         <div id="screen-address" class="hidden space-y-4">
-            <button onclick="backToCity()" class="text-slate-400 text-xs font-bold uppercase tracking-widest">← Назад к выбору города</button>
-            <h2 class="text-xl font-black">Укажите адрес</h2>
+            <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">← Назад</button>
+            <h2 class="text-xl font-black uppercase tracking-tighter">Укажите адрес</h2>
             <div class="space-y-3">
                 <input id="in-street" type="text" placeholder="Улица" class="w-full p-4 rounded-2xl bg-white shadow-sm border-none outline-none focus:ring-2 ring-green-500">
                 <div class="flex gap-2">
@@ -40,35 +40,35 @@
                     <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm border-none outline-none focus:ring-2 ring-green-500">
                 </div>
             </div>
-            <button onclick="finishReg()" id="reg-finish-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl shadow-green-100 active:scale-95 transition-all uppercase tracking-widest mt-4">Подтвердить адрес</button>
+            <button onclick="finishReg()" id="reg-finish-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase tracking-widest active:scale-95 transition-all mt-4 italic">Подтвердить адрес</button>
         </div>
 
-        <!-- ВКЛАДКА: ГЛАВНАЯ -->
+        <!-- ГЛАВНАЯ -->
         <div id="tab-home" class="hidden space-y-5 animate-in fade-in duration-500">
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-50">
-                <h3 class="text-[10px] font-black text-slate-300 uppercase tracking-widest text-center">График выноса мусора</h3>
+                <h3 class="text-[10px] font-black text-slate-300 uppercase tracking-widest text-center italic">Ваш график</h3>
                 <div id="schedule-box" class="mt-4 p-8 rounded-3xl bg-slate-50 text-center border border-slate-100">
                     <p id="removal-time-display" class="text-4xl font-black text-slate-800 italic uppercase">Ожидание...</p>
-                    <p id="schedule-hint" class="text-[10px] text-slate-400 mt-2 font-bold uppercase italic text-center">Админ назначит время</p>
+                    <p id="schedule-hint" class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter italic text-center">Админ скоро назначит время</p>
                 </div>
                 
                 <div id="trash-controls" class="hidden mt-4 space-y-2">
-                    <button id="btn-trash-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 transition-all uppercase tracking-tighter">Выставил пакеты</button>
+                    <button id="btn-trash-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 uppercase tracking-tighter italic">Выставил пакеты</button>
                     <button id="btn-trash-cancel" onclick="trashAction(false)" class="hidden w-full bg-white border-2 border-red-500 text-red-500 py-3 rounded-2xl font-bold text-[10px] uppercase tracking-widest">Отменить подтверждение</button>
                 </div>
             </div>
 
             <div onclick="showTab('shop')" class="bg-blue-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl shadow-blue-100 active:scale-95 transition-all">
-                <div><h3 class="text-lg font-black italic uppercase tracking-tighter">Детские товары</h3><p class="text-blue-100 text-[10px] opacity-70 uppercase font-bold tracking-widest mt-1">Доставка под дверь</p></div>
+                <div><h3 class="text-lg font-black italic uppercase tracking-tighter">Магазин товаров</h3><p class="text-blue-100 text-[10px] opacity-70 uppercase font-bold tracking-widest mt-1">Доставка под дверь</p></div>
                 <span class="text-3xl">🧸</span>
             </div>
         </div>
 
-        <!-- ВКЛАДКА: МАГАЗИН -->
+        <!-- МАГАЗИН -->
         <div id="tab-shop" class="hidden space-y-4 pt-2">
             <div class="flex justify-between items-center px-1">
-                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Магазин</h2>
-                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest">🛒 Корзина (<span id="cart-count">0</span>)</button>
+                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Каталог</h2>
+                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic">🛒 (<span id="cart-count">0</span>)</button>
             </div>
             
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -76,49 +76,34 @@
                 <button onclick="filterShop('Подгузники')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Подгузники">Подгузники</button>
                 <button onclick="filterShop('Смеси')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Смеси">Смеси</button>
                 <button onclick="filterShop('Салфетки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Салфетки">Салфетки</button>
-                <button onclick="filterShop('Пюре и соки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Пюре и соки">Пюре и соки</button>
             </div>
 
-            <div id="shop-items" class="grid grid-cols-2 gap-3 pb-24 animate-in slide-in-from-bottom-5 duration-500"></div>
+            <div id="shop-items" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
-        <!-- КОРЗИНА -->
-        <div id="modal-cart" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-end">
-            <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-black italic uppercase tracking-tighter">Ваш заказ</h3>
-                    <button onclick="toggleCart()" class="bg-slate-100 p-2 rounded-full text-slate-400">✕</button>
-                </div>
-                <div id="cart-items-list" class="space-y-4 mb-8"></div>
-                <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl uppercase tracking-widest active:scale-95">Оформить заказ</button>
-            </div>
-        </div>
-
-        <!-- ВКЛАДКА: АДМИН -->
+        <!-- АДМИН -->
         <div id="tab-admin" class="hidden space-y-8 pb-24">
-            <div class="flex justify-between items-center bg-red-50 p-4 rounded-2xl border-2 border-red-100">
-                <h2 class="text-sm font-black text-red-600 uppercase italic">Панель управления</h2>
-                <button onclick="showTab('home')" class="bg-white px-3 py-1 rounded-lg text-[10px] font-bold text-slate-400 shadow-sm border">Выход</button>
+            <div class="bg-red-600 p-4 rounded-2xl text-white shadow-xl flex justify-between items-center">
+                <h2 class="text-sm font-black uppercase italic tracking-widest">Админ-панель</h2>
+                <button onclick="showTab('home')" class="bg-white/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase backdrop-blur-md">Выйти</button>
             </div>
             
-            <!-- Добавить товар -->
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100">
-                <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest">Добавить товар в магазин</h3>
-                <div class="space-y-3 text-center">
-                    <input id="adm-p-name" type="text" placeholder="Название" class="w-full p-4 rounded-xl bg-slate-50 border-none text-sm outline-none">
-                    <input id="adm-p-price" type="number" placeholder="Цена (только цифры)" class="w-full p-4 rounded-xl bg-slate-50 border-none text-sm outline-none">
-                    <input id="adm-p-img" type="text" placeholder="Ссылка на фото (URL)" class="w-full p-4 rounded-xl bg-slate-50 border-none text-sm outline-none">
-                    <select id="adm-p-cat" class="w-full p-4 rounded-xl bg-slate-50 border-none text-sm font-bold text-slate-500 uppercase">
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border">
+                <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest italic text-center underline">Добавить товар</h3>
+                <div class="space-y-3">
+                    <input id="adm-p-name" type="text" placeholder="Название" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
+                    <input id="adm-p-price" type="number" placeholder="Цена" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
+                    <input id="adm-p-img" type="text" placeholder="Ссылка на фото" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
+                    <select id="adm-p-cat" class="w-full p-4 rounded-xl bg-slate-50 border-none font-bold uppercase text-xs">
                         <option value="Подгузники">Подгузники</option>
                         <option value="Смеси">Смеси</option>
                         <option value="Салфетки">Салфетки</option>
                         <option value="Пюре и соки">Пюре и соки</option>
                     </select>
-                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Добавить товар</button>
+                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black uppercase tracking-widest italic text-sm">Опубликовать</button>
                 </div>
             </div>
 
-            <!-- Управление клиентами -->
             <div class="space-y-4">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1 italic">Список клиентов</h3>
                 <div id="admin-clients-list" class="space-y-4"></div>
@@ -126,15 +111,25 @@
         </div>
     </main>
 
-    <!-- NAVBAR -->
-    <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50">
-        <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 transition-all">
-            <span class="text-xl">🏠</span>
-            <span class="text-[9px] font-black uppercase tracking-tighter">Главная</span>
+    <!-- КОРЗИНА -->
+    <div id="modal-cart" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-end">
+        <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-black italic tracking-tighter uppercase">Заказ</h3>
+                <button onclick="toggleCart()" class="text-slate-400 font-bold">✕</button>
+            </div>
+            <div id="cart-items-list" class="space-y-4 mb-8"></div>
+            <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl uppercase tracking-widest">Оформить</button>
+        </div>
+    </div>
+
+    <!-- МЕНЮ -->
+    <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50 shadow-2xl">
+        <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1">
+            <span class="text-xl">🏠</span><span class="text-[9px] font-black uppercase italic">Главная</span>
         </button>
-        <button onclick="showTab('shop')" id="nav-shop" class="flex flex-col items-center gap-1 transition-all">
-            <span class="text-xl">📦</span>
-            <span class="text-[9px] font-black uppercase tracking-tighter">Магазин</span>
+        <button onclick="showTab('shop')" id="nav-shop" class="flex flex-col items-center gap-1">
+            <span class="text-xl">📦</span><span class="text-[9px] font-black uppercase italic">Магазин</span>
         </button>
     </nav>
 
@@ -153,10 +148,7 @@
         let myData = { 
             tg_id: String(tg.initDataUnsafe?.user?.id || '593064482'), 
             username: tg.initDataUnsafe?.user?.username || '',
-            city: '', 
-            addr: '', 
-            cart: [], 
-            isAdmin: false 
+            city: '', addr: '', cart: [], isAdmin: false 
         };
 
         async function init() {
@@ -164,7 +156,6 @@
                 myData.isAdmin = true;
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
             }
-
             const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
             if (data) {
                 myData.city = data.city;
@@ -176,40 +167,27 @@
         }
         init();
 
-        // РЕГИСТРАЦИЯ
         function pickCity(c) {
             myData.city = c;
             document.getElementById('screen-city').classList.add('hidden');
             document.getElementById('screen-address').classList.remove('hidden');
-            tg.HapticFeedback.impactOccurred('medium');
         }
-        function backToCity() {
-            document.getElementById('screen-address').classList.add('hidden');
-            document.getElementById('screen-city').classList.remove('hidden');
-        }
+
         async function finishReg() {
-            const btn = document.getElementById('reg-finish-btn');
             const s = document.getElementById('in-street').value, h = document.getElementById('in-house').value, f = document.getElementById('in-flat').value;
-            if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и дом!');
-            
-            btn.innerText = 'ПОДОЖДИТЕ...';
+            if(!s || !h) return tg.showAlert('Укажите адрес!');
             myData.addr = `${s}, ${h}, кв.${f}`;
-            
             await sb.from('clients').upsert({ 
-                tg_id: myData.tg_id, 
-                city: myData.city, 
-                address: myData.addr, 
+                tg_id: myData.tg_id, city: myData.city, address: myData.addr, 
                 name: tg.initDataUnsafe?.user?.first_name || 'Клиент',
                 username: myData.username
             });
             showTab('home');
         }
 
-        // ВКЛАДКИ
         async function showTab(t) {
             ['home', 'shop', 'admin'].forEach(id => document.getElementById('tab-'+id)?.classList.add('hidden'));
             ['home', 'shop'].forEach(id => document.getElementById('nav-'+id)?.classList.replace('text-green-600', 'text-slate-300'));
-            
             document.getElementById('tab-'+t).classList.remove('hidden');
             if(t !== 'admin') {
                 document.getElementById('nav-'+t).classList.replace('text-slate-300', 'text-green-600');
@@ -218,7 +196,6 @@
                 document.getElementById('navbar').classList.add('hidden');
                 loadAdminClients();
             }
-
             if(t === 'home') {
                 const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
                 if(data && data.schedule) {
@@ -230,10 +207,9 @@
             if(t === 'shop') loadProducts();
         }
 
-        // МУСОР
+        // --- ЛОГИКА МУСОРА ---
         function updateTrashButtons(isOut) {
-            const bOut = document.getElementById('btn-trash-out');
-            const bCancel = document.getElementById('btn-trash-cancel');
+            const bOut = document.getElementById('btn-trash-out'), bCancel = document.getElementById('btn-trash-cancel');
             if(isOut) {
                 bOut.innerText = '✅ ПОДТВЕРЖДЕНО';
                 bOut.classList.replace('bg-green-600', 'bg-slate-200');
@@ -250,17 +226,15 @@
         async function trashAction(isOut) {
             await sb.from('clients').update({ trash_out_today: isOut }).eq('tg_id', myData.tg_id);
             updateTrashButtons(isOut);
-            
             const text = isOut ? `🔔 ВЫСТАВИЛ: ${myData.addr}` : `❌ ОТМЕНА: ${myData.addr}`;
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
-            
             if(isOut) {
                 tg.HapticFeedback.notificationOccurred('success');
                 setTimeout(() => tg.close(), 1200);
             }
         }
 
-        // МАГАЗИН
+        // --- МАГАЗИН ---
         function filterShop(cat) {
             currentCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('cat-active', b.id === 'cat-'+cat));
@@ -272,20 +246,17 @@
             if(currentCategory !== 'Все') q = q.eq('category', currentCategory);
             const { data } = await q;
             const box = document.getElementById('shop-items');
-            box.innerHTML = '';
-            data.forEach(p => {
-                box.innerHTML += `
-                    <div class="bg-white p-4 rounded-[2rem] border relative flex flex-col h-full active:scale-95 transition-all shadow-sm">
-                        ${myData.isAdmin ? `<button onclick="deleteProduct(${p.id})" class="absolute top-2 right-2 bg-red-50 text-red-500 p-1 rounded-full text-[7px] font-black uppercase">Удалить</button>` : ''}
-                        <img src="${p.image_url}" class="h-20 w-full object-contain mb-3 bg-slate-50 rounded-2xl p-2">
-                        <h4 class="text-[10px] font-black leading-tight flex-grow uppercase tracking-tighter text-slate-700">${p.name}</h4>
-                        <div class="mt-4 flex items-center justify-between">
-                            <span class="font-black text-sm text-green-600">${p.price} ₽</span>
-                            <button onclick="addToCart(${p.id},'${p.name}',${p.price})" class="bg-slate-900 text-white w-8 h-8 rounded-full font-bold shadow-lg shadow-slate-200">+</button>
-                        </div>
+            box.innerHTML = data.map(p => `
+                <div class="bg-white p-4 rounded-[2rem] border relative flex flex-col h-full shadow-sm active:scale-95 transition-all">
+                    ${myData.isAdmin ? `<button onclick="deleteProduct(${p.id})" class="absolute top-2 right-2 bg-red-100 text-red-600 p-1 rounded-full text-[7px] font-black uppercase">X</button>` : ''}
+                    <img src="${p.image_url}" class="h-20 w-full object-contain mb-3 bg-slate-50 rounded-2xl p-2">
+                    <h4 class="text-[10px] font-black uppercase text-slate-700 leading-tight flex-grow italic">${p.name}</h4>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="font-black text-sm text-green-600 italic">${p.price}₽</span>
+                        <button onclick="addToCart(${p.id},'${p.name}',${p.price})" class="bg-slate-900 text-white w-8 h-8 rounded-full font-bold shadow-lg">+</button>
                     </div>
-                `;
-            });
+                </div>
+            `).join('');
         }
 
         function addToCart(id, name, price) {
@@ -300,9 +271,9 @@
             list.innerHTML = myData.cart.map(i => `
                 <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
                     <div class="flex flex-col"><span class="text-[11px] font-bold uppercase">${i.name}</span><span class="text-[10px] font-black text-green-600">${i.price} ₽</span></div>
-                    <button onclick="removeFromCart(${i.cid})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-1.5 rounded-xl">Удалить</button>
+                    <button onclick="removeFromCart(${i.cid})" class="text-red-500 font-bold text-[10px] uppercase">Удалить</button>
                 </div>
-            `).join('') || '<p class="text-center text-slate-300 italic py-10 uppercase text-[10px]">Ваша корзина пуста</p>';
+            `).join('') || '<p class="text-center text-slate-300 italic py-10">Пусто</p>';
         }
 
         function removeFromCart(cid) {
@@ -315,23 +286,21 @@
             if(!myData.cart.length) return;
             const names = myData.cart.map(i => i.name).join(', ');
             await sb.from('orders').insert({ client_tg_id: myData.tg_id, product_name: names });
-            tg.showAlert('Благодарим! Ваш заказ принят и уже обрабатывается.');
-            myData.cart = [];
-            document.getElementById('cart-count').innerText = '0';
+            tg.showAlert('Заказ принят!');
+            myData.cart = []; document.getElementById('cart-count').innerText = '0';
             toggleCart(); showTab('home');
         }
 
-        // АДМИН ПАНЕЛЬ
+        // --- АДМИН ---
         async function adminAddProduct() {
             const n = document.getElementById('adm-p-name').value, p = document.getElementById('adm-p-price').value, i = document.getElementById('adm-p-img').value, c = document.getElementById('adm-p-cat').value;
-            if(!n || !p || !i) return alert('Пожалуйста, заполните все поля!');
+            if(!n || !p || !i) return alert('Заполните всё!');
             await sb.from('products').insert({ name: n, price: parseInt(p), image_url: i, category: c });
-            alert('Успешно! Товар добавлен в каталог.');
-            loadProducts();
+            tg.showAlert('Товар добавлен!'); loadProducts();
         }
 
         async function deleteProduct(id) {
-            if(confirm('Вы уверены, что хотите удалить этот товар?')) {
+            if(confirm('Удалить?')) {
                 await sb.from('products').delete().eq('id', id);
                 loadProducts();
             }
@@ -340,28 +309,19 @@
         async function loadAdminClients() {
             const { data } = await sb.from('clients').select('*').order('created_at', {ascending: false});
             const box = document.getElementById('admin-clients-list');
-            
             box.innerHTML = data.map(c => `
-                <div class="bg-white p-5 rounded-[2rem] border-2 border-slate-50 shadow-sm space-y-4">
+                <div class="bg-white p-5 rounded-[2.5rem] border-2 border-slate-50 shadow-sm space-y-4">
                     <div class="flex justify-between items-start">
-                        <div class="flex flex-col">
-                            <span class="text-xs font-black uppercase text-slate-800">${c.name || 'Без имени'}</span>
-                            <span class="text-[9px] font-bold text-slate-400 italic">ID: ${c.tg_id}</span>
-                        </div>
+                        <div class="flex flex-col"><span class="text-xs font-black uppercase text-slate-800 italic">${c.name || 'Клиент'}</span><span class="text-[9px] font-bold text-slate-400">ID: ${c.tg_id}</span></div>
                         <div class="flex gap-2">
-                             ${c.username ? `<a href="https://t.me/${c.username}" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase">Написать</a>` : `<span class="bg-slate-100 text-slate-400 px-3 py-2 rounded-xl text-[10px] font-bold uppercase">Лички нет</span>`}
-                             <button onclick="deleteClient('${c.tg_id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase">Удалить</button>
+                             ${c.username ? `<a href="https://t.me/${c.username}" target="_blank" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase italic">Написать</a>` : ''}
+                             <button onclick="deleteClient('${c.tg_id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase italic">Удалить</button>
                         </div>
                     </div>
-                    
-                    <div class="p-3 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">${c.city} • ${c.address}</p>
-                    </div>
-
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest bg-slate-50 p-3 rounded-2xl italic">${c.city} • ${c.address}</p>
                     <div class="flex items-center gap-3">
-                        <span class="text-[10px] font-black uppercase text-slate-400">График:</span>
-                        <input type="time" id="time-${c.tg_id}" value="${c.schedule || ''}" class="p-2 border rounded-xl outline-none font-bold text-slate-700 bg-white shadow-sm">
-                        <button onclick="setTime('${c.tg_id}')" class="bg-green-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px] uppercase">ОК</button>
+                        <input type="time" id="time-${c.tg_id}" value="${c.schedule || ''}" class="p-2 border rounded-xl outline-none font-black text-xs text-slate-700 shadow-sm">
+                        <button onclick="setTime('${c.tg_id}')" class="bg-green-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px] uppercase italic">ОК</button>
                     </div>
                 </div>
             `).join('');
@@ -370,14 +330,14 @@
         async function setTime(tid) {
             const val = document.getElementById('time-'+tid).value;
             await sb.from('clients').update({ schedule: val }).eq('tg_id', tid);
-            tg.showScanQrPopup({ text: 'Время сохранено!' });
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert('Время сохранено!');
             loadAdminClients();
         }
 
         async function deleteClient(tid) {
-            if(confirm('Вы действительно хотите удалить этого клиента из базы? Это действие нельзя отменить.')) {
+            if(confirm('Удалить клиента?')) {
                 await sb.from('clients').delete().eq('tg_id', tid);
-                alert('Клиент удален.');
                 loadAdminClients();
             }
         }
