@@ -6,171 +6,164 @@
     <title>ЧистоВера</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Библиотека базы данных -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        .btn-shadow { shadow-lg shadow-green-100; }
-        input:focus { border-color: #10b981; ring: 2px; ring-color: #10b981; }
-    </style>
 </head>
 <body class="bg-gray-50 font-sans min-h-screen flex flex-col">
 
-    <!-- Шапка -->
-    <header class="bg-white p-4 shadow-sm border-b border-gray-100 flex justify-between items-center">
-        <div>
-            <h1 class="text-xl font-extrabold text-green-600 tracking-tight">ЧистоВера</h1>
-            <p id="top-city" class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Сервис заботы</p>
-        </div>
-        <div id="user-status" class="text-right">
-            <span class="block w-2 h-2 bg-green-500 rounded-full animate-pulse ml-auto"></span>
-            <p class="text-[9px] text-gray-400 mt-1">Online</p>
-        </div>
+    <header class="bg-white p-4 shadow-sm border-b flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-black text-green-600 tracking-tighter">ЧИСТОВЕРА</h1>
+        <div id="city-badge" class="text-[10px] bg-gray-100 px-2 py-1 rounded-full font-bold text-gray-500 uppercase">Ингушетия</div>
     </header>
 
-    <main class="flex-grow p-5">
+    <main class="flex-grow p-4 pb-24">
         
-        <!-- ШАГ 1: ВЫБОР ГОРОДА -->
-        <div id="step-1" class="space-y-4 pt-6">
-            <h2 class="text-center text-lg font-bold text-gray-800 mb-8">В каком городе вы живете?</h2>
-            <button onclick="setCity('Магас')" class="w-full bg-white p-6 rounded-3xl shadow-sm border-2 border-transparent active:border-green-500 active:scale-95 transition-all text-left flex justify-between items-center group">
-                <div>
-                    <span class="text-3xl">🏙</span>
-                    <span class="text-xl font-bold ml-3 text-gray-700">Магас</span>
-                </div>
-                <span class="text-green-500 font-bold opacity-0 group-active:opacity-100">→</span>
-            </button>
+        <!-- ЭКРАН 1: РЕГИСТРАЦИЯ (скрывается если адрес есть) -->
+        <div id="reg-section" class="space-y-4">
+            <div id="step-city" class="space-y-4">
+                <h2 class="text-center font-bold text-lg mt-4">Выберите город</h2>
+                <button onclick="selectCity('Магас')" class="w-full bg-white p-5 rounded-2xl shadow-sm border text-left flex justify-between items-center">
+                    <span class="font-bold">🏙 Магас</span> <span>→</span>
+                </button>
+                <button onclick="selectCity('Назрань')" class="w-full bg-white p-5 rounded-2xl shadow-sm border text-left flex justify-between items-center">
+                    <span class="font-bold">🏡 Назрань</span> <span>→</span>
+                </button>
+            </div>
 
-            <button onclick="setCity('Назрань')" class="w-full bg-white p-6 rounded-3xl shadow-sm border-2 border-transparent active:border-green-500 active:scale-95 transition-all text-left flex justify-between items-center group">
-                <div>
-                    <span class="text-3xl">🏡</span>
-                    <span class="text-xl font-bold ml-3 text-gray-700">Назрань</span>
+            <div id="step-address" class="hidden space-y-4">
+                <h2 class="font-bold text-lg">Ваш адрес</h2>
+                <input id="in-street" type="text" placeholder="Улица" class="w-full p-4 rounded-xl border outline-none focus:border-green-500">
+                <div class="flex gap-2">
+                    <input id="in-house" type="text" placeholder="Дом" class="w-1/2 p-4 rounded-xl border outline-none focus:border-green-500">
+                    <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-xl border outline-none focus:border-green-500">
                 </div>
-                <span class="text-green-500 font-bold opacity-0 group-active:opacity-100">→</span>
-            </button>
+                <button onclick="saveProfile()" class="w-full bg-green-600 text-white p-4 rounded-xl font-bold">Продолжить</button>
+            </div>
         </div>
 
-        <!-- ШАГ 2: ВВОД АДРЕСА -->
-        <div id="step-2" class="hidden space-y-4 pt-4">
-            <div class="flex items-center gap-2 mb-6">
-                <button onclick="location.reload()" class="text-gray-400 text-sm">← Назад</button>
-                <h2 class="text-xl font-bold text-gray-800">Укажите адрес</h2>
+        <!-- ЭКРАН 2: ГЛАВНАЯ (ВЫНОС МУСОРА) -->
+        <div id="tab-home" class="hidden space-y-4">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-green-50">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-xl font-bold">Вынос мусора</h3>
+                    <span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded-full font-bold">ПОДПИСКА</span>
+                </div>
+                <p id="client-addr-view" class="text-gray-400 text-xs mt-1 italic"></p>
+                <div class="mt-6 p-4 bg-gray-50 rounded-2xl border text-center">
+                    <p class="text-gray-500 text-sm">Ближайший обход: <span class="font-bold text-black">Сегодня 13:00</span></p>
+                    <button onclick="confirmTrash()" id="trash-btn" class="w-full mt-4 bg-white border-2 border-green-500 text-green-600 py-3 rounded-xl font-bold active:scale-95 transition-all">Мусор выставлен</button>
+                </div>
             </div>
             
-            <div class="space-y-3">
-                <label class="block">
-                    <span class="text-xs font-bold text-gray-400 ml-1 uppercase">Улица</span>
-                    <input id="street" type="text" placeholder="пр-т И. Зязикова" class="w-full mt-1 p-4 rounded-2xl border border-gray-100 bg-white outline-none focus:border-green-500 transition-all shadow-sm">
-                </label>
-                
-                <div class="flex gap-3">
-                    <label class="w-1/2">
-                        <span class="text-xs font-bold text-gray-400 ml-1 uppercase">Дом</span>
-                        <input id="house" type="text" placeholder="12А" class="w-full mt-1 p-4 rounded-2xl border border-gray-100 bg-white outline-none focus:border-green-500 shadow-sm">
-                    </label>
-                    <label class="w-1/2">
-                        <span class="text-xs font-bold text-gray-400 ml-1 uppercase">Кв / Офис</span>
-                        <input id="flat" type="text" placeholder="45" class="w-full mt-1 p-4 rounded-2xl border border-gray-100 bg-white outline-none focus:border-green-500 shadow-sm">
-                    </label>
-                </div>
-            </div>
-
-            <button id="save-btn" onclick="saveToDb()" class="w-full bg-green-500 text-white p-5 rounded-2xl font-extrabold text-lg shadow-xl shadow-green-100 mt-6 active:scale-95 transition-all">
-                Подтвердить адрес
-            </button>
-            <p class="text-center text-[10px] text-gray-400">Нажимая кнопку, вы соглашаетесь с правилами сервиса</p>
-        </div>
-
-        <!-- ШАГ 3: ФИНАЛ (ГЛАВНАЯ) -->
-        <div id="step-3" class="hidden space-y-6 pt-4 animate-in fade-in duration-500">
-            <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-50 text-center">
-                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                    ✓
-                </div>
-                <h3 class="text-xl font-bold text-gray-800">Адрес сохранен!</h3>
-                <p id="display-address" class="text-gray-500 mt-2 text-sm"></p>
-                
-                <div class="mt-8 p-4 bg-orange-50 rounded-2xl border border-orange-100">
-                    <p class="text-orange-700 text-xs font-bold uppercase tracking-wider">Статус подписки</p>
-                    <p class="text-orange-800 mt-1 text-sm">Ожидает активации. Мы скоро напишем вам в Telegram!</p>
-                </div>
-            </div>
-
-            <div class="bg-blue-600 p-6 rounded-[32px] shadow-lg text-white relative overflow-hidden">
-                <div class="relative z-10">
-                    <h3 class="text-xl font-bold">Детские товары</h3>
-                    <p class="text-blue-100 text-sm mt-1 opacity-80">Доставка подгузников и питания в Магасе и Назрани</p>
-                    <button class="w-full mt-6 bg-white text-blue-600 py-4 rounded-2xl font-extrabold shadow-sm active:scale-95 transition-all">
-                        Перейти в магазин
-                    </button>
-                </div>
-                <!-- Декор -->
-                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full"></div>
+            <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-6 rounded-3xl text-white shadow-lg relative overflow-hidden">
+                <h3 class="text-lg font-bold">Детские товары</h3>
+                <p class="text-blue-100 text-sm opacity-80">Бесконтактная доставка под дверь</p>
+                <button onclick="showTab('shop')" class="mt-4 bg-white text-blue-600 px-6 py-2 rounded-full font-bold text-sm">В магазин</button>
+                <div class="absolute -right-4 -bottom-4 text-6xl opacity-20">🧸</div>
             </div>
         </div>
+
+        <!-- ЭКРАН 3: МАГАЗИН -->
+        <div id="tab-shop" class="hidden space-y-4">
+            <h2 class="text-xl font-bold px-2">Каталог товаров</h2>
+            <div id="product-list" class="grid grid-cols-2 gap-3">
+                <!-- Товары загрузятся сюда -->
+            </div>
+        </div>
+
     </main>
+
+    <!-- Нижнее меню -->
+    <nav id="bottom-nav" class="hidden fixed bottom-0 w-full bg-white border-t border-gray-100 p-3 flex justify-around items-center pb-8 z-50">
+        <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center text-green-600 transition-all">
+            <span class="text-xl">🏠</span>
+            <span class="text-[10px] font-bold">Главная</span>
+        </button>
+        <button onclick="showTab('shop')" id="nav-shop" class="flex flex-col items-center text-gray-300 transition-all">
+            <span class="text-xl">📦</span>
+            <span class="text-[10px] font-bold">Магазин</span>
+        </button>
+    </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Данные Supabase
         const SUPABASE_URL = 'https://gpreejfftspjqarthpfp.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwcmVlamZmdHNwanFhcnRocGZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNzM4MDUsImV4cCI6MjA4Nzg0OTgwNX0.6u9FNjZLW3AVDY_RNLq4Dm8Yn4XC5JsI84aQlUKXI7c';
-        
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let clientData = {
-            city: '',
-            tg_id: tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'test_user',
-            name: tg.initDataUnsafe?.user?.first_name || 'Клиент'
-        };
+        let myData = { city: '', addr: '', tg_id: String(tg.initDataUnsafe?.user?.id || 'test') };
 
-        function setCity(city) {
-            clientData.city = city;
-            document.getElementById('top-city').innerText = 'ЧистоВера • ' + city;
-            document.getElementById('step-1').classList.add('hidden');
-            document.getElementById('step-2').classList.remove('hidden');
-            tg.HapticFeedback.impactOccurred('medium');
+        // Инициализация
+        async function init() {
+            const { data } = await supabase.from('clients').select('*').eq('tg_id', myData.tg_id).single();
+            if (data) {
+                myData.city = data.city;
+                myData.addr = data.address;
+                showTab('home');
+            }
+        }
+        init();
+
+        function selectCity(c) {
+            myData.city = c;
+            document.getElementById('step-city').classList.add('hidden');
+            document.getElementById('step-address').classList.remove('hidden');
         }
 
-        async function saveToDb() {
-            const btn = document.getElementById('save-btn');
-            const street = document.getElementById('street').value;
-            const house = document.getElementById('house').value;
-            const flat = document.getElementById('flat').value;
+        async function saveProfile() {
+            const street = document.getElementById('in-street').value;
+            const house = document.getElementById('in-house').value;
+            const flat = document.getElementById('in-flat').value;
+            if(!street || !house) return alert('Укажите адрес!');
+
+            myData.addr = `${street}, д.${house}, кв.${flat}`;
+            await supabase.from('clients').upsert({ tg_id: myData.tg_id, city: myData.city, address: myData.addr, name: tg.initDataUnsafe?.user?.first_name });
+            showTab('home');
+        }
+
+        function showTab(t) {
+            document.getElementById('reg-section').classList.add('hidden');
+            document.getElementById('tab-home').classList.add('hidden');
+            document.getElementById('tab-shop').classList.add('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+
+            document.getElementById('nav-home').classList.replace('text-green-600', 'text-gray-300');
+            document.getElementById('nav-shop').classList.replace('text-green-600', 'text-gray-300');
+
+            document.getElementById('tab-' + t).classList.remove('hidden');
+            document.getElementById('nav-' + t).classList.replace('text-gray-300', 'text-green-600');
             
-            if(!street || !house) {
-                tg.showAlert('Пожалуйста, укажите улицу и дом');
-                return;
-            }
-
-            const fullAddress = `${street}, д.${house}, кв.${flat}`;
-            btn.innerText = 'Загрузка...';
-            btn.disabled = true;
-
-            const { error } = await supabaseClient
-                .from('clients')
-                .upsert({ 
-                    tg_id: clientData.tg_id, 
-                    name: clientData.name, 
-                    city: clientData.city, 
-                    address: fullAddress 
-                });
-
-            if (error) {
-                console.error(error);
-                alert('Ошибка сохранения: ' + error.message);
-                btn.innerText = 'Попробовать снова';
-                btn.disabled = false;
-            } else {
-                showFinal(fullAddress);
-            }
+            if(t === 'home') document.getElementById('client-addr-view').innerText = myData.addr;
+            if(t === 'shop') loadProducts();
         }
 
-        function showFinal(addr) {
-            document.getElementById('step-2').classList.add('hidden');
-            document.getElementById('step-3').classList.remove('hidden');
-            document.getElementById('display-address').innerText = addr;
+        async function loadProducts() {
+            const { data } = await supabase.from('products').select('*');
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            data.forEach(p => {
+                list.innerHTML += `
+                    <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
+                        <img src="${p.image_url}" class="h-24 w-full object-contain mb-2 rounded-lg">
+                        <h4 class="text-[11px] font-bold leading-tight h-8">${p.name}</h4>
+                        <p class="text-green-600 font-black mt-2">${p.price} ₽</p>
+                        <button onclick="orderProduct('${p.name}')" class="mt-2 bg-gray-900 text-white text-[10px] py-2 rounded-xl font-bold active:bg-green-600">Заказать</button>
+                    </div>
+                `;
+            });
+        }
+
+        async function orderProduct(name) {
+            await supabase.from('orders').insert({ client_tg_id: myData.tg_id, product_name: name });
+            tg.showAlert('Заказ принят! Мы свяжемся с вами для уточнения деталей.');
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+
+        function confirmTrash() {
+            const btn = document.getElementById('trash-btn');
+            btn.innerText = '✅ Курьер уведомлен';
+            btn.classList.add('bg-green-50', 'border-transparent');
             tg.HapticFeedback.notificationOccurred('success');
         }
     </script>
