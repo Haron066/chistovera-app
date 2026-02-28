@@ -10,20 +10,16 @@
     <style>
         .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 0; }
-        .cart-modal { animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .cat-active { background-color: #16a34a; color: white; border-color: #16a34a; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen text-slate-900 overflow-x-hidden">
 
     <!-- ШАПКА -->
     <header class="bg-white sticky top-0 z-[100] border-b border-slate-100 p-4 flex justify-between items-center shadow-sm">
-        <div>
-            <h1 class="text-xl font-black text-green-600 tracking-tighter italic">ЧИСТОВЕРА</h1>
-            <p id="top-badge" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Магас • Назрань</p>
-        </div>
-        <!-- Кнопка админа видна только тебе -->
-        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-red-100">Админ</button>
+        <h1 class="text-xl font-black text-green-600 tracking-tighter italic">ЧИСТОВЕРА</h1>
+        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ</button>
     </header>
 
     <main class="p-4">
@@ -37,88 +33,88 @@
 
         <!-- ЭКРАН 2: АДРЕС -->
         <div id="screen-address" class="hidden space-y-4">
-            <button onclick="backToCity()" class="text-slate-400 text-xs font-bold flex items-center gap-1">← НАЗАД К ГОРОДАМ</button>
+            <button onclick="backToCity()" class="text-slate-400 text-xs font-bold">← НАЗАД</button>
             <h2 class="text-xl font-black">Ваш адрес</h2>
-            <div class="space-y-3">
-                <input id="in-street" type="text" placeholder="Улица" class="w-full p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500 transition-all">
-                <div class="flex gap-2">
-                    <input id="in-house" type="text" placeholder="Дом" class="w-1/2 p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500">
-                    <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500">
-                </div>
+            <input id="in-street" type="text" placeholder="Улица" class="w-full p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500">
+            <div class="flex gap-2">
+                <input id="in-house" type="text" placeholder="Дом" class="w-1/2 p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500">
+                <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-inner border-none outline-none focus:ring-2 ring-green-500">
             </div>
             <button onclick="finishReg()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl shadow-green-100 active:scale-95 transition-all">ПОДТВЕРДИТЬ</button>
         </div>
 
-        <!-- ВКЛАДКА: ГЛАВНАЯ (Для клиента) -->
+        <!-- ВКЛАДКА: ГЛАВНАЯ (Мусор) -->
         <div id="tab-home" class="hidden space-y-4">
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-50">
-                <h3 class="text-xs font-black text-slate-300 uppercase tracking-widest">График выноса мусора</h3>
+                <h3 class="text-xs font-black text-slate-300 uppercase tracking-widest text-center">График выноса мусора</h3>
                 <div id="schedule-box" class="mt-4 p-8 rounded-3xl bg-slate-50 text-center border border-slate-100">
-                    <p id="removal-time-display" class="text-4xl font-black text-slate-800 italic uppercase">Ожидание...</p>
-                    <p id="schedule-hint" class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter">Админ назначит время в ближайшее время</p>
+                    <p id="removal-time-display" class="text-4xl font-black text-slate-800 italic">Ожидание...</p>
+                    <p id="schedule-hint" class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter italic">Админ назначит время</p>
                 </div>
-                <button id="btn-trash-action" onclick="trashConfirm()" class="hidden w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 active:scale-95 transition-all">ВЫСТАВИЛ ПАКЕТЫ</button>
-            </div>
-
-            <div onclick="showTab('shop')" class="bg-blue-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl shadow-blue-100 active:scale-95 transition-all">
-                <div>
-                    <h3 class="text-lg font-black">Детские товары</h3>
-                    <p class="text-blue-100 text-xs opacity-70 italic">Доставка под дверь</p>
-                </div>
-                <span class="text-3xl">🧸</span>
+                <button id="btn-trash-action" onclick="trashConfirm()" class="hidden w-full mt-4 bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 active:scale-95 transition-all">ВЫСТАВИЛ МУСОР</button>
             </div>
         </div>
 
         <!-- ВКЛАДКА: МАГАЗИН -->
         <div id="tab-shop" class="hidden space-y-4">
-            <div class="flex justify-between items-end px-2">
+            <div class="flex justify-between items-center px-2">
                 <h2 class="text-2xl font-black italic">Магазин</h2>
-                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider">🛒 Корзина (<span id="cart-count">0</span>)</button>
+                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase">🛒 (<span id="cart-count">0</span>)</button>
             </div>
+
+            <!-- Категории -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                <button onclick="filterShop('Все')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-xs font-bold cat-active" id="cat-Все">Все</button>
+                <button onclick="filterShop('Подгузники')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-xs font-bold" id="cat-Подгузники">Подгузники</button>
+                <button onclick="filterShop('Смеси')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-xs font-bold" id="cat-Смеси">Смеси</button>
+                <button onclick="filterShop('Салфетки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-xs font-bold" id="cat-Салфетки">Салфетки</button>
+                <button onclick="filterShop('Пюре и соки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-xs font-bold" id="cat-Пюре и соки">Пюре и соки</button>
+            </div>
+
             <div id="shop-items" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
-        <!-- МОДАЛКА: КОРЗИНА -->
+        <!-- КОРЗИНА -->
         <div id="modal-cart" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-end">
-            <div class="bg-white w-full rounded-t-[3rem] p-8 cart-modal max-h-[85vh] overflow-y-auto shadow-2xl">
+            <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto shadow-2xl">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-black italic">Ваш заказ</h3>
                     <button onclick="toggleCart()" class="bg-slate-100 p-2 rounded-full text-slate-400">✕</button>
                 </div>
                 <div id="cart-items-list" class="space-y-4 mb-8"></div>
-                <div class="border-t border-slate-100 pt-6 flex justify-between items-center mb-8">
-                    <span class="font-bold text-slate-400 italic">Итого к оплате:</span>
+                <div class="border-t pt-6 flex justify-between items-center mb-8">
+                    <span class="font-bold text-slate-400 italic">Итого:</span>
                     <span id="cart-total-price" class="text-2xl font-black text-green-600">0 ₽</span>
                 </div>
-                <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl shadow-green-100 active:scale-95 transition-all">ОФОРМИТЬ ЗАКАЗ</button>
+                <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl active:scale-95 transition-all">ОФОРМИТЬ</button>
             </div>
         </div>
 
-        <!-- ВКЛАДКА: АДМИН (Только для 593064482) -->
+        <!-- ВКЛАДКА: АДМИН -->
         <div id="tab-admin" class="hidden space-y-8 pb-24">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h2 class="text-xl font-black text-red-600 italic">УПРАВЛЕНИЕ</h2>
-                <button onclick="showTab('home')" class="text-slate-400 text-xs font-bold">Выйти</button>
-            </div>
-
-            <!-- Добавить товар -->
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                <h3 class="font-black text-sm mb-4 uppercase text-slate-400 tracking-widest">Добавить товар</h3>
+                <h3 class="font-black text-xs mb-4 uppercase text-slate-400 tracking-widest">Добавить товар</h3>
                 <div class="space-y-3">
-                    <input id="adm-p-name" type="text" placeholder="Название" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-1 ring-slate-200">
-                    <input id="adm-p-price" type="number" placeholder="Цена (цифрами)" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-1 ring-slate-200">
-                    <input id="adm-p-img" type="text" placeholder="Ссылка на фото" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-1 ring-slate-200">
-                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black text-xs uppercase tracking-widest">Опубликовать</button>
+                    <input id="adm-p-name" type="text" placeholder="Название" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none">
+                    <input id="adm-p-price" type="number" placeholder="Цена" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none">
+                    <input id="adm-p-img" type="text" placeholder="URL картинки" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none">
+                    
+                    <select id="adm-p-cat" class="w-full p-3 rounded-xl bg-slate-50 border-none text-sm outline-none text-slate-500">
+                        <option value="Подгузники">Подгузники</option>
+                        <option value="Смеси">Смеси</option>
+                        <option value="Салфетки">Салфетки</option>
+                        <option value="Пюре и соки">Пюре и соки</option>
+                    </select>
+                    
+                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black text-xs uppercase tracking-widest">Добавить</button>
                 </div>
             </div>
 
-            <!-- Новые клиенты -->
             <div class="space-y-4">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1">Новые адреса</h3>
-                <div id="admin-pending-clients" class="space-y-3 text-center py-4"></div>
+                <div id="admin-pending-clients" class="space-y-3"></div>
             </div>
 
-            <!-- Новые заказы -->
             <div class="space-y-4">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1">Заказы товаров</h3>
                 <div id="admin-orders-list" class="space-y-3"></div>
@@ -126,7 +122,7 @@
         </div>
     </main>
 
-    <!-- МЕНЮ НАВИГАЦИИ -->
+    <!-- МЕНЮ -->
     <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-100 p-4 flex justify-around pb-10 z-50">
         <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-300">
             <span class="text-xl">🏠</span>
@@ -146,28 +142,17 @@
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwcmVlamZmdHNwanFhcnRocGZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNzM4MDUsImV4cCI6MjA4Nzg0OTgwNX0.6u9FNjZLW3AVDY_RNLq4Dm8Yn4XC5JsI84aQlUKXI7c';
         const sb = supabase.createClient(S_URL, S_KEY);
 
-        // --- ВАШ ID АДМИНИСТРАТОРА ---
         const ADMIN_ID = '593064482'; 
-        // -----------------------------
-
-        let myData = { 
-            tg_id: String(tg.initDataUnsafe?.user?.id || '593064482'), 
-            city: '', 
-            addr: '', 
-            cart: [] 
-        };
+        let currentCategory = 'Все';
+        let myData = { tg_id: String(tg.initDataUnsafe?.user?.id || '593064482'), city: '', addr: '', cart: [] };
 
         async function init() {
-            // Проверка на админа
-            if(myData.tg_id === ADMIN_ID) {
-                document.getElementById('admin-nav-btn').classList.remove('hidden');
-            }
+            if(myData.tg_id === ADMIN_ID) document.getElementById('admin-nav-btn').classList.remove('hidden');
 
             const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
             if (data) {
                 myData.city = data.city;
                 myData.addr = data.address;
-                document.getElementById('top-badge').innerText = 'ЧистоВера • ' + data.city;
                 showTab('home');
             } else {
                 document.getElementById('screen-city').classList.remove('hidden');
@@ -180,7 +165,6 @@
             myData.city = c;
             document.getElementById('screen-city').classList.add('hidden');
             document.getElementById('screen-address').classList.remove('hidden');
-            tg.HapticFeedback.impactOccurred('light');
         }
         function backToCity() {
             document.getElementById('screen-address').classList.add('hidden');
@@ -188,15 +172,9 @@
         }
         async function finishReg() {
             const s = document.getElementById('in-street').value, h = document.getElementById('in-house').value, f = document.getElementById('in-flat').value;
-            if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома');
-            
+            if(!s || !h) return tg.showAlert('Заполните адрес!');
             myData.addr = `${s}, ${h}, кв.${f}`;
-            await sb.from('clients').upsert({ 
-                tg_id: myData.tg_id, 
-                city: myData.city, 
-                address: myData.addr, 
-                name: tg.initDataUnsafe?.user?.first_name || 'Клиент' 
-            });
+            await sb.from('clients').upsert({ tg_id: myData.tg_id, city: myData.city, address: myData.addr, name: tg.initDataUnsafe?.user?.first_name || 'Клиент' });
             showTab('home');
         }
 
@@ -206,11 +184,9 @@
             ['home', 'shop'].forEach(id => document.getElementById('nav-'+id)?.classList.replace('text-green-600', 'text-slate-300'));
             
             document.getElementById('tab-'+t).classList.remove('hidden');
-            
             if(t !== 'admin') {
                 document.getElementById('nav-'+t).classList.replace('text-slate-300', 'text-green-600');
                 document.getElementById('navbar').classList.remove('hidden');
-                tg.HapticFeedback.impactOccurred('light');
             } else {
                 document.getElementById('navbar').classList.add('hidden');
                 loadAdminData();
@@ -220,23 +196,34 @@
                 const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
                 if(data && data.schedule) {
                     document.getElementById('removal-time-display').innerText = data.schedule;
-                    document.getElementById('schedule-hint').innerText = 'Пожалуйста, выставите пакеты за дверь';
+                    document.getElementById('schedule-hint').innerText = 'Пожалуйста, выставите мусор к этому времени';
                     document.getElementById('btn-trash-action').classList.remove('hidden');
                 }
             }
             if(t === 'shop') loadProducts();
         }
 
-        // МАГАЗИН И КОРЗИНА
+        // МАГАЗИН И КАТЕГОРИИ
+        function filterShop(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('cat-active'));
+            document.getElementById('cat-' + cat).classList.add('cat-active');
+            loadProducts();
+        }
+
         async function loadProducts() {
-            const { data } = await sb.from('products').select('*').order('id', {ascending: false});
+            let query = sb.from('products').select('*').order('id', {ascending: false});
+            if(currentCategory !== 'Все') {
+                query = query.eq('category', currentCategory);
+            }
+            const { data } = await query;
             const container = document.getElementById('shop-items');
             container.innerHTML = '';
             data.forEach(p => {
                 container.innerHTML += `
-                    <div class="bg-white p-4 rounded-[2rem] shadow-sm border border-slate-50 flex flex-col h-full active:scale-95 transition-all">
+                    <div class="bg-white p-4 rounded-[2rem] shadow-sm border border-slate-50 flex flex-col h-full">
                         <img src="${p.image_url}" class="h-24 w-full object-contain mb-3 rounded-2xl bg-slate-50 p-2">
-                        <h4 class="text-[10px] font-black text-slate-700 leading-tight flex-grow uppercase tracking-tighter">${p.name}</h4>
+                        <h4 class="text-[10px] font-black text-slate-700 leading-tight flex-grow uppercase">${p.name}</h4>
                         <div class="mt-4 flex items-center justify-between">
                             <span class="font-black text-sm text-green-600 italic">${p.price} ₽</span>
                             <button onclick="addToCart(${p.id}, '${p.name}', ${p.price})" class="bg-green-600 text-white w-9 h-9 rounded-2xl font-black shadow-lg shadow-green-100">+</button>
@@ -248,44 +235,37 @@
 
         function addToCart(id, name, price) {
             myData.cart.push({ cartId: Date.now(), id, name, price });
-            updateCartCount();
+            document.getElementById('cart-count').innerText = myData.cart.length;
             tg.HapticFeedback.impactOccurred('medium');
         }
 
         function toggleCart() {
             const modal = document.getElementById('modal-cart');
             modal.classList.toggle('hidden');
-            if(!modal.classList.contains('hidden')) renderCartItems();
-        }
-
-        function renderCartItems() {
-            const list = document.getElementById('cart-items-list');
-            const totalEl = document.getElementById('cart-total-price');
-            list.innerHTML = myData.cart.length ? '' : '<p class="text-center text-slate-300 py-10 italic">Корзина пуста</p>';
-            let total = 0;
-            myData.cart.forEach(item => {
-                total += item.price;
-                list.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
-                        <div class="flex-grow pr-4">
-                            <p class="text-[11px] font-black uppercase tracking-tighter text-slate-700">${item.name}</p>
-                            <p class="text-[11px] text-green-600 font-black italic mt-1">${item.price} ₽</p>
+            if(!modal.classList.contains('hidden')) {
+                const list = document.getElementById('cart-items-list');
+                const totalEl = document.getElementById('cart-total-price');
+                list.innerHTML = myData.cart.length ? '' : '<p class="text-center text-slate-300 py-10 italic">Пусто</p>';
+                let total = 0;
+                myData.cart.forEach(item => {
+                    total += item.price;
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                            <div class="flex-grow pr-4">
+                                <p class="text-[11px] font-black uppercase text-slate-700">${item.name}</p>
+                                <p class="text-[11px] text-green-600 font-black italic mt-1">${item.price} ₽</p>
+                            </div>
+                            <button onclick="removeFromCart(${item.cartId})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-2 rounded-xl">Удалить</button>
                         </div>
-                        <button onclick="removeFromCart(${item.cartId})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-2 rounded-xl">Удалить</button>
-                    </div>
-                `;
-            });
-            totalEl.innerText = total + ' ₽';
+                    `;
+                });
+                totalEl.innerText = total + ' ₽';
+            }
         }
 
         function removeFromCart(cartId) {
             myData.cart = myData.cart.filter(i => i.cartId !== cartId);
-            renderCartItems();
-            updateCartCount();
-            tg.HapticFeedback.impactOccurred('light');
-        }
-
-        function updateCartCount() {
+            toggleCart(); toggleCart(); // Перерисовываем
             document.getElementById('cart-count').innerText = myData.cart.length;
         }
 
@@ -293,9 +273,9 @@
             if(!myData.cart.length) return;
             const names = myData.cart.map(i => i.name).join(', ');
             await sb.from('orders').insert({ client_tg_id: myData.tg_id, product_name: names });
-            tg.showAlert('Заказ успешно оформлен! Курьер скоро свяжется с вами.');
+            tg.showAlert('Заказ оформлен! Курьер свяжется с вами.');
             myData.cart = [];
-            updateCartCount();
+            document.getElementById('cart-count').innerText = '0';
             toggleCart();
             showTab('home');
         }
@@ -305,33 +285,16 @@
             const pendingBox = document.getElementById('admin-pending-clients');
             const ordersBox = document.getElementById('admin-orders-list');
             
-            // 1. Клиенты без времени
             const { data: clients } = await sb.from('clients').select('*').is('schedule', null);
-            pendingBox.innerHTML = clients.length ? '' : '<p class="text-xs text-slate-300 py-4">Новых адресов нет</p>';
+            pendingBox.innerHTML = clients.length ? '' : '<p class="text-xs text-slate-300 py-4 text-center">Нет новых адресов</p>';
             clients.forEach(c => {
-                pendingBox.innerHTML += `
-                    <div class="bg-white p-5 rounded-[2rem] border shadow-sm text-left">
-                        <p class="font-black text-sm uppercase text-slate-800">${c.name} • ${c.city}</p>
-                        <p class="text-[11px] text-slate-400 mt-1 italic">${c.address}</p>
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="adminSetTime('${c.tg_id}', '13:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black italic">13:00</button>
-                            <button onclick="adminSetTime('${c.tg_id}', '18:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black italic">18:00</button>
-                            <button onclick="adminSetTime('${c.tg_id}', '19:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black italic">19:00</button>
-                        </div>
-                    </div>
-                `;
+                pendingBox.innerHTML += `<div class="bg-white p-5 rounded-[2rem] border shadow-sm"><p class="font-black text-sm uppercase text-slate-800">${c.name} • ${c.city}</p><p class="text-[11px] text-slate-400 mt-1 italic">${c.address}</p><div class="flex gap-2 mt-4"><button onclick="adminSetTime('${c.tg_id}', '13:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black">13:00</button><button onclick="adminSetTime('${c.tg_id}', '18:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black">18:00</button><button onclick="adminSetTime('${c.tg_id}', '19:00')" class="flex-grow bg-green-50 text-green-700 text-[11px] py-3 rounded-xl font-black">19:00</button></div></div>`;
             });
 
-            // 2. Все заказы
             const { data: orders } = await sb.from('orders').select('*').order('created_at', {ascending: false});
-            ordersBox.innerHTML = orders.length ? '' : '<p class="text-xs text-slate-300">Заказов пока нет</p>';
+            ordersBox.innerHTML = orders.length ? '' : '<p class="text-xs text-slate-300">Нет заказов</p>';
             orders.forEach(o => {
-                ordersBox.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl border text-[10px]">
-                        <p class="font-bold">📦 ТОВАРЫ: <span class="text-blue-600 uppercase">${o.product_name}</span></p>
-                        <p class="text-slate-400 mt-2 italic">Создан: ${new Date(o.created_at).toLocaleString()}</p>
-                    </div>
-                `;
+                ordersBox.innerHTML += `<div class="bg-white p-4 rounded-2xl border text-[10px]"><p class="font-bold uppercase tracking-tight">📦 ${o.product_name}</p><p class="text-slate-400 mt-2 italic">Создан: ${new Date(o.created_at).toLocaleString()}</p></div>`;
             });
         }
 
@@ -345,24 +308,28 @@
             const name = document.getElementById('adm-p-name').value;
             const price = document.getElementById('adm-p-price').value;
             const img = document.getElementById('adm-p-img').value;
+            const cat = document.getElementById('adm-p-cat').value;
 
-            if(!name || !price || !img) return alert('Заполните данные товара');
+            if(!name || !price || !img) return alert('Заполните все данные!');
 
-            const { error } = await sb.from('products').insert({ name, price: parseInt(price), image_url: img });
+            const { error } = await sb.from('products').insert({ name, price: parseInt(price), image_url: img, category: cat });
             if(!error) {
-                alert('Товар опубликован!');
+                alert('Товар добавлен в категорию: ' + cat);
                 document.getElementById('adm-p-name').value = '';
                 document.getElementById('adm-p-price').value = '';
                 document.getElementById('adm-p-img').value = '';
-                loadProducts();
             }
         }
 
+        // УВЕДОМЛЕНИЕ О МУСОРЕ
         function trashConfirm() {
             const btn = document.getElementById('btn-trash-action');
-            btn.innerText = '✅ КУРЬЕР УВЕДОМЛЕН';
+            btn.innerText = '✅ УВЕДОМЛЕНИЕ ОТПРАВЛЕНО';
             btn.classList.replace('bg-green-600', 'bg-slate-200');
             btn.disabled = true;
+            
+            // Отправляем сообщение боту, чтобы он переслал админу
+            tg.sendData("МУСОР_ВЫСТАВЛЕН: " + myData.addr);
             tg.HapticFeedback.notificationOccurred('success');
         }
     </script>
