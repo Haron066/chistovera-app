@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ЧистоВера FULL PRO</title>
+    <title>ЧистоВера - Официальное приложение</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -11,28 +11,33 @@
         .hidden { display: none !important; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .cat-active { background: #16a34a; color: white; border-color: #16a34a; }
-        input:focus { ring: 2px; ring-color: #16a34a; outline: none; }
+        input:focus { outline: none; ring: 2px; ring-color: #16a34a; }
+        .active-nav { color: #16a34a !important; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen text-slate-900 pb-24">
 
-    <!-- HEADER -->
+    <!-- ШАПКА -->
     <header class="bg-white sticky top-0 z-[100] border-b p-4 flex justify-between items-center shadow-sm">
-        <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase">ЧИСТОВЕРА</h1>
-        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ</button>
+        <div>
+            <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase leading-none">ЧИСТОВЕРА</h1>
+            <p id="top-city-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ингушетия</p>
+        </div>
+        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ-панель</button>
     </header>
 
     <main class="p-4">
-        <!-- 1. РЕГИСТРАЦИЯ (ГОРОД) -->
+        
+        <!-- ЭКРАН 1: ВЫБОР ГОРОДА -->
         <div id="screen-city" class="hidden space-y-4 pt-10 text-center">
             <h2 class="text-2xl font-black uppercase italic tracking-tighter text-slate-800">Ваш город?</h2>
-            <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all italic">🏙 Магас</button>
-            <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
+            <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏙 Магас</button>
+            <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
         </div>
 
-        <!-- 2. РЕГИСТРАЦИЯ (АДРЕС) -->
-        <div id="screen-address" class="hidden space-y-4">
-            <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase italic tracking-widest">← Назад к выбору города</button>
+        <!-- ЭКРАН 2: ВВОД АДРЕСА -->
+        <div id="screen-address" class="hidden space-y-4 pt-4">
+            <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase italic tracking-widest mb-2">← Назад к городам</button>
             <h2 class="text-xl font-black uppercase tracking-tighter">Укажите адрес</h2>
             <div class="space-y-3">
                 <input id="in-street" type="text" placeholder="Улица" class="w-full p-4 rounded-2xl bg-white shadow-sm border-none">
@@ -41,116 +46,137 @@
                     <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                 </div>
             </div>
-            <button onclick="finishReg()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить</button>
+            <button onclick="finishReg()" id="reg-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить адрес</button>
         </div>
 
-        <!-- 3. ЭКРАН ТАРИФОВ -->
-        <div id="screen-tariffs" class="hidden space-y-6 pt-6 animate-in fade-in duration-500">
-            <h2 class="text-2xl font-black text-center uppercase italic tracking-tighter">Выберите тариф</h2>
+        <!-- ЭКРАН 3: ВЫБОР ТАРИФА -->
+        <div id="screen-tariffs" class="hidden space-y-6 pt-6">
+            <h2 class="text-2xl font-black text-center uppercase italic tracking-tighter">Выберите подписку</h2>
+            
             <div onclick="selectTariff('daily', 750)" class="bg-white p-6 rounded-[2.5rem] border-2 border-green-500 shadow-xl active:scale-95 transition-all relative">
-                <span class="absolute top-0 right-0 bg-green-500 text-white px-3 py-1 rounded-bl-xl text-[9px] font-black uppercase italic">Ежедневно</span>
-                <h3 class="text-lg font-black uppercase italic">БЕЗЛИМИТ</h3>
-                <p class="text-slate-400 text-[10px] mt-1 font-bold">Вынос мусора каждый день</p>
-                <p class="text-2xl font-black text-green-600 mt-4">750 ₽ <span class="text-[10px] text-slate-300">/ МЕС</span></p>
+                <span class="absolute top-0 right-0 bg-green-500 text-white px-3 py-1 rounded-bl-xl text-[9px] font-black uppercase">Популярный</span>
+                <h3 class="text-lg font-black uppercase italic">Ежедневный</h3>
+                <p class="text-slate-400 text-[10px] mt-1 font-bold uppercase">Вынос мусора каждый день</p>
+                <p class="text-2xl font-black text-green-600 mt-4">750 ₽ <span class="text-[10px] text-slate-300">/ МЕСЯЦ</span></p>
             </div>
+
             <div onclick="selectTariff('5days', 650)" class="bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm active:scale-95 transition-all">
-                <h3 class="text-lg font-black uppercase italic text-slate-700">5 ДНЕЙ В НЕДЕЛЮ</h3>
-                <p class="text-slate-400 text-[10px] mt-1 font-bold uppercase">До 5 выносов в неделю</p>
-                <p class="text-2xl font-black text-slate-800 mt-4">650 ₽ <span class="text-[10px] text-slate-300">/ МЕС</span></p>
+                <h3 class="text-lg font-black uppercase italic text-slate-700">5 дней в неделю</h3>
+                <p class="text-slate-400 text-[10px] mt-1 font-bold uppercase">Любые 5 дней по выбору</p>
+                <p class="text-2xl font-black text-slate-800 mt-4">650 ₽ <span class="text-[10px] text-slate-300">/ МЕСЯЦ</span></p>
             </div>
-            <p class="text-center text-[9px] text-slate-400 uppercase font-black px-10 italic">Оплата через Сбербанк СБП</p>
+            
+            <div class="bg-blue-50 p-4 rounded-2xl text-center">
+                <p class="text-[9px] text-blue-600 uppercase font-black leading-tight italic">После нажатия откроется Сбербанк Онлайн. <br> Оплатите и ожидайте активации.</p>
+            </div>
         </div>
 
-        <!-- 4. ВКЛАДКА: ГЛАВНАЯ (HOME) -->
-        <div id="tab-home" class="hidden space-y-5">
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border">
+        <!-- ЭКРАН: ГЛАВНАЯ (Home) -->
+        <div id="tab-home" class="hidden space-y-4 animate-in fade-in duration-500">
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-50">
                 <div class="flex justify-between items-center mb-4">
-                    <span id="sub-type-badge" class="bg-green-100 text-green-700 text-[9px] px-3 py-1 rounded-full font-black uppercase italic">Активна</span>
-                    <span id="limit-counter" class="hidden text-[10px] font-black text-slate-400 uppercase italic"></span>
+                    <span id="badge-sub-type" class="bg-green-100 text-green-700 text-[9px] px-3 py-1 rounded-full font-black uppercase italic">Тариф активен</span>
+                    <span id="label-weekly-limit" class="hidden text-[10px] font-black text-slate-400 uppercase italic"></span>
                 </div>
-                <div class="p-8 rounded-3xl bg-slate-50 text-center border">
-                    <p id="removal-time-display" class="text-4xl font-black text-slate-800 italic uppercase">Ожидание...</p>
-                    <p class="text-[9px] text-slate-400 mt-2 font-bold uppercase italic tracking-widest">Ваш график выноса</p>
+                
+                <div class="p-8 rounded-3xl bg-slate-50 text-center border border-slate-100">
+                    <p class="text-[9px] text-slate-400 mb-1 font-bold uppercase tracking-widest italic">Время вашего обхода</p>
+                    <p id="display-schedule-time" class="text-4xl font-black text-slate-800 italic uppercase leading-none">Ожидание...</p>
+                    <p id="hint-schedule" class="text-[9px] text-slate-400 mt-3 font-bold uppercase italic">Админ скоро назначит график</p>
                 </div>
-                <div id="trash-controls" class="hidden mt-4 space-y-2">
-                    <button id="btn-trash-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg uppercase italic">ВЫСТАВИЛ МУСОР</button>
-                    <button id="btn-trash-cancel" onclick="trashAction(false)" class="hidden w-full bg-white border-2 border-red-500 text-red-500 py-3 rounded-2xl font-bold text-[10px] uppercase italic">ОТМЕНИТЬ</button>
-                    <p id="limit-error" class="hidden text-center text-red-600 text-[10px] font-black uppercase mt-2 italic">Лимит на эту неделю исчерпан!</p>
+                
+                <div id="block-trash-confirm" class="hidden mt-4 space-y-2">
+                    <button id="btn-confirm-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 uppercase italic tracking-tighter">Выставил пакеты</button>
+                    <button id="btn-confirm-cancel" onclick="trashAction(false)" class="hidden w-full bg-white border-2 border-red-500 text-red-500 py-3 rounded-2xl font-bold text-[10px] uppercase italic">Отменить подтверждение</button>
+                    <p id="error-limit-msg" class="hidden text-center text-red-600 text-[10px] font-black uppercase mt-2 italic">Лимит 5 раз на этой неделе исчерпан!</p>
                 </div>
             </div>
+
             <div onclick="showTab('shop')" class="bg-blue-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
-                <div><h3 class="text-lg font-black uppercase italic">Магазин товаров</h3><p class="text-blue-100 text-[10px] uppercase font-bold tracking-widest mt-1">Доставка под дверь</p></div>
+                <div>
+                    <h3 class="text-lg font-black uppercase italic tracking-tighter">Магазин товаров</h3>
+                    <p class="text-blue-100 text-[10px] opacity-70 uppercase font-bold tracking-widest mt-1">Доставка до двери</p>
+                </div>
                 <span class="text-3xl">🧸</span>
             </div>
         </div>
 
-        <!-- 5. ВКЛАДКА: МАГАЗИН (SHOP) -->
-        <div id="tab-shop" class="hidden space-y-4">
+        <!-- ЭКРАН: МАГАЗИН -->
+        <div id="tab-shop" class="hidden space-y-4 pt-2">
             <div class="flex justify-between items-center px-1">
-                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Магазин</h2>
-                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic">🛒 (<span id="cart-count">0</span>)</button>
+                <button onclick="showTab('home')" class="text-slate-400 text-[10px] font-black uppercase">← Назад</button>
+                <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic">🛒 Корзина (<span id="cart-count">0</span>)</button>
             </div>
+            
+            <!-- Категории -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-                <button onclick="filterShop('Все')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase cat-active" id="cat-Все">Все</button>
-                <button onclick="filterShop('Подгузники')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase" id="cat-Подгузники">Подгузники</button>
-                <button onclick="filterShop('Смеси')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase" id="cat-Смеси">Смеси</button>
-                <button onclick="filterShop('Салфетки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase" id="cat-Салфетки">Салфетки</button>
-                <button onclick="filterShop('Пюре и соки')" class="cat-btn flex-shrink-0 px-4 py-2 rounded-full bg-white border text-[10px] font-black uppercase" id="cat-Пюре и соки">Пюре и соки</button>
+                <button onclick="filterShop('Все')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest cat-active" id="cat-Все">Все</button>
+                <button onclick="filterShop('Подгузники')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Подгузники">Подгузники</button>
+                <button onclick="filterShop('Смеси')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Смеси">Смеси</button>
+                <button onclick="filterShop('Салфетки')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Салфетки">Салфетки</button>
+                <button onclick="filterShop('Пюре и соки')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Пюре и соки">Пюре</button>
             </div>
-            <div id="shop-items" class="grid grid-cols-2 gap-3 pb-24"></div>
+
+            <div id="shop-items-container" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
-        <!-- 6. ВКЛАДКА: АДМИН (ADMIN) -->
+        <!-- ЭКРАН: АДМИН ПАНЕЛЬ -->
         <div id="tab-admin" class="hidden space-y-8 pb-24">
-            <div class="bg-red-600 p-4 rounded-2xl text-white shadow-xl flex justify-between items-center">
-                <h2 class="text-sm font-black uppercase italic tracking-widest">Админ-панель</h2>
-                <button onclick="showTab('home')" class="bg-white/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase italic">Выйти</button>
+            <div class="bg-red-600 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
+                <h2 class="text-sm font-black uppercase italic tracking-widest leading-none">Админ-панель <br><span class="text-[9px] opacity-60">Управление ЧистоВера</span></h2>
+                <button onclick="showTab('home')" class="bg-white/20 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase backdrop-blur-md border border-white/30">Выйти</button>
             </div>
+            
             <!-- Добавить товар -->
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border">
-                <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest text-center underline italic">Добавить товар</h3>
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border-2 border-slate-100">
+                <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest text-center italic underline underline-offset-4">Новый товар в магазин</h3>
                 <div class="space-y-3">
-                    <input id="adm-p-name" type="text" placeholder="Название" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
-                    <input id="adm-p-price" type="number" placeholder="Цена" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
-                    <input id="adm-p-img" type="text" placeholder="URL картинки" class="w-full p-4 rounded-xl bg-slate-50 border-none outline-none">
-                    <select id="adm-p-cat" class="w-full p-4 rounded-xl bg-slate-50 border-none text-xs font-bold uppercase">
+                    <input id="adm-name" type="text" placeholder="Название" class="w-full p-4 rounded-2xl bg-slate-50 border-none text-sm font-bold">
+                    <input id="adm-price" type="number" placeholder="Цена" class="w-full p-4 rounded-2xl bg-slate-50 border-none text-sm font-bold">
+                    <input id="adm-img" type="text" placeholder="Ссылка на фото" class="w-full p-4 rounded-2xl bg-slate-50 border-none text-sm font-bold">
+                    <select id="adm-cat" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold uppercase text-xs text-slate-500">
                         <option value="Подгузники">Подгузники</option>
                         <option value="Смеси">Смеси</option>
                         <option value="Салфетки">Салфетки</option>
                         <option value="Пюре и соки">Пюре и соки</option>
                     </select>
-                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black uppercase text-sm">Опубликовать</button>
+                    <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black uppercase tracking-widest italic text-sm shadow-lg">Опубликовать</button>
                 </div>
             </div>
+
             <!-- Список клиентов -->
             <div class="space-y-4">
-                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1 italic">Список клиентов</h3>
-                <div id="admin-clients-list" class="space-y-4"></div>
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1 italic px-2">Управление клиентами</h3>
+                <div id="admin-clients-box" class="space-y-4"></div>
             </div>
         </div>
     </main>
 
-    <!-- NAVBAR (BOTTOM) -->
-    <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50 shadow-2xl">
-        <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-300">
-            <span class="text-xl font-bold">🏠</span><span class="text-[9px] font-black uppercase italic">Главная</span>
-        </button>
-        <button onclick="showTab('shop')" id="nav-shop" class="flex flex-col items-center gap-1 text-slate-300">
-            <span class="text-xl font-bold">📦</span><span class="text-[9px] font-black uppercase italic">Магазин</span>
-        </button>
-    </nav>
-
     <!-- КОРЗИНА (MODAL) -->
     <div id="modal-cart" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-end">
-        <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto">
+        <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-black italic uppercase">Заказ</h3>
-                <button onclick="toggleCart()" class="text-slate-400 font-bold">✕</button>
+                <h3 class="text-2xl font-black italic tracking-tighter uppercase text-slate-800">Ваш заказ</h3>
+                <button onclick="toggleCart()" class="bg-slate-100 text-slate-400 w-10 h-10 rounded-full font-bold flex items-center justify-center">✕</button>
             </div>
-            <div id="cart-items-list" class="space-y-4 mb-8"></div>
-            <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl uppercase italic">Оформить</button>
+            <div id="cart-list" class="space-y-4 mb-8"></div>
+            <div class="border-t border-slate-100 pt-6 flex justify-between items-center mb-8">
+                <span class="font-bold text-slate-400 italic">Итого:</span>
+                <span id="cart-total" class="text-2xl font-black text-green-600 italic">0 ₽</span>
+            </div>
+            <button onclick="placeOrder()" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-2xl shadow-green-100 uppercase tracking-widest active:scale-95 transition-all italic">Оформить доставку</button>
         </div>
     </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50 shadow-2xl">
+        <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-300 transition-all">
+            <span class="text-2xl">🏠</span><span class="text-[9px] font-black uppercase italic">Главная</span>
+        </button>
+        <button onclick="showTab('shop')" id="nav-shop" class="flex flex-col items-center gap-1 text-slate-300 transition-all">
+            <span class="text-2xl">📦</span><span class="text-[9px] font-black uppercase italic">Магазин</span>
+        </button>
+    </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -165,171 +191,290 @@
         const SBER_URL = 'https://www.sberbank.com/sms/pbpn?requisiteNumber=79380061001';
 
         let curCat = 'Все';
-        let myData = { tg_id: String(tg.initDataUnsafe?.user?.id || '593064482'), sub_type: 'none', weekly_clicks: 0, cart: [], isAdmin: false };
+        let user = { 
+            id: String(tg.initDataUnsafe?.user?.id || '593064482'), 
+            name: tg.initDataUnsafe?.user?.first_name || 'Клиент',
+            username: tg.initDataUnsafe?.user?.username || '',
+            city: '', addr: '', sub: 'none', clicks: 0, cart: [], isAdmin: false 
+        };
 
+        // --- ИНИЦИАЛИЗАЦИЯ ---
         async function init() {
-            if(myData.tg_id === ADMIN_ID) {
-                myData.isAdmin = true;
+            if(user.id === ADMIN_ID) {
+                user.isAdmin = true;
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
             }
-            const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
+
+            const { data } = await sb.from('clients').select('*').eq('tg_id', user.id).single();
+            
             if (!data) {
                 document.getElementById('screen-city').classList.remove('hidden');
-            } else if (data.sub_type === 'none' && !myData.isAdmin) {
+            } else if (data.sub_type === 'none' && !user.isAdmin) {
+                user.city = data.city;
+                user.addr = data.address;
                 document.getElementById('screen-tariffs').classList.remove('hidden');
             } else {
-                myData = {...myData, ...data};
+                user.city = data.city;
+                user.addr = data.address;
+                user.sub = data.sub_type;
+                user.clicks = data.weekly_clicks;
+                document.getElementById('top-city-label').innerText = 'ЧистоВера • ' + user.city;
                 showTab('home');
             }
         }
         init();
 
         // --- РЕГИСТРАЦИЯ ---
-        function pickCity(c) { myData.city = c; document.getElementById('screen-city').classList.add('hidden'); document.getElementById('screen-address').classList.remove('hidden'); }
-        function backToCity() { document.getElementById('screen-address').classList.add('hidden'); document.getElementById('screen-city').classList.remove('hidden'); }
+        function pickCity(c) {
+            user.city = c;
+            document.getElementById('screen-city').classList.add('hidden');
+            document.getElementById('screen-address').classList.remove('hidden');
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+        function backToCity() {
+            document.getElementById('screen-address').classList.add('hidden');
+            document.getElementById('screen-city').classList.remove('hidden');
+        }
         async function finishReg() {
             const s = document.getElementById('in-street').value, h = document.getElementById('in-house').value, f = document.getElementById('in-flat').value;
-            if(!s || !h) return tg.showAlert('Укажите адрес!');
-            myData.addr = `${s}, ${h}, кв.${f}`;
-            await sb.from('clients').upsert({ tg_id: myData.tg_id, city: myData.city, address: myData.addr, name: tg.initDataUnsafe?.user?.first_name, username: tg.initDataUnsafe?.user?.username });
-            init();
+            if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома!');
+            
+            user.addr = `${s}, д.${h}, кв.${f}`;
+            await sb.from('clients').upsert({ 
+                tg_id: user.id, city: user.city, address: user.addr, name: user.name, username: user.username 
+            });
+            
+            if(user.isAdmin) showTab('home');
+            else {
+                document.getElementById('screen-address').classList.add('hidden');
+                document.getElementById('screen-tariffs').classList.remove('hidden');
+            }
         }
 
-        // --- ТАРИФЫ И ОПЛАТА ---
+        // --- ТАРИФЫ ---
         function selectTariff(type, price) {
-            tg.showConfirm(`Выбран тариф за ${price}₽. Перейти к оплате в Сбербанк?`, (confirm) => {
+            tg.showConfirm(`Вы выбрали тариф за ${price}₽. Перейти в Сбербанк Онлайн для оплаты?`, (confirm) => {
                 if(confirm) {
-                    const text = `💰 ЗАЯВКА НА ОПЛАТУ!\n👤 Имя: ${tg.initDataUnsafe?.user?.first_name}\n📦 Тариф: ${type}\n💵 Сумма: ${price}₽\nПроверьте банк и активируйте в админке!`;
+                    const text = `💰 ЗАЯВКА НА ПОДПИСКУ!\n\n👤 Имя: ${user.name}\n📦 Тариф: ${type === 'daily' ? 'Ежедневный' : '5 дней'}\n💵 Сумма: ${price}₽\n📍 Адрес: ${user.addr}\n\nПосле получения денег активируйте тариф в админке!`;
                     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
                     tg.openLink(SBER_URL);
-                    tg.showAlert("Ожидайте активации после оплаты.");
+                    tg.showAlert("Ожидайте активации доступа в течение нескольких минут после оплаты.");
                 }
             });
         }
 
         // --- ВКЛАДКИ ---
         async function showTab(t) {
-            ['home', 'shop', 'admin', 'screen-tariffs', 'screen-city', 'screen-address'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
-            ['home', 'shop'].forEach(id => document.getElementById('nav-'+id)?.classList.replace('text-green-600', 'text-slate-300'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
+            const screens = ['tab-home', 'tab-shop', 'tab-admin', 'screen-city', 'screen-address', 'screen-tariffs'];
+            screens.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            
+            document.getElementById('tab-' + t).classList.remove('hidden');
             document.getElementById('navbar').classList.toggle('hidden', t === 'admin');
-            if(t !== 'admin') document.getElementById('nav-'+t).classList.replace('text-slate-300', 'text-green-600');
+
+            document.getElementById('nav-home').classList.remove('active-nav');
+            document.getElementById('nav-shop').classList.remove('active-nav');
+            if(t !== 'admin') document.getElementById('nav-' + t).classList.add('active-nav');
 
             if(t === 'home') {
-                const { data } = await sb.from('clients').select('*').eq('tg_id', myData.tg_id).single();
-                myData = {...myData, ...data};
-                const badge = document.getElementById('sub-type-badge');
-                badge.innerText = `Тариф: ${myData.sub_type === 'daily' ? 'Ежедневный' : '5 дней'}`;
-                if(myData.sub_type === '5days') {
-                    const lc = document.getElementById('limit-counter');
+                const { data } = await sb.from('clients').select('*').eq('tg_id', user.id).single();
+                user.clicks = data.weekly_clicks;
+                user.sub = data.sub_type;
+                
+                const badge = document.getElementById('badge-sub-type');
+                badge.innerText = `Тариф: ${user.sub === 'daily' ? 'Ежедневный' : (user.sub === '5days' ? '5 дней' : 'Не активен')}`;
+                
+                if(user.sub === '5days') {
+                    const lc = document.getElementById('label-weekly-limit');
                     lc.classList.remove('hidden');
-                    lc.innerText = `Лимит: ${myData.weekly_clicks}/5`;
+                    lc.innerText = `Выносов на неделе: ${user.clicks}/5`;
                 }
-                document.getElementById('removal-time-display').innerText = myData.schedule || 'Ожидание...';
-                if(myData.schedule) document.getElementById('trash-controls').classList.remove('hidden');
-                updateTrashButtons(myData.trash_out_today);
+
+                document.getElementById('display-schedule-time').innerText = data.schedule || 'Ожидание...';
+                if(data.schedule) {
+                    document.getElementById('block-trash-confirm').classList.remove('hidden');
+                    updateTrashButtons(data.trash_out_today);
+                }
             }
             if(t === 'shop') loadProducts();
             if(t === 'admin') loadAdminClients();
+            tg.HapticFeedback.impactOccurred('light');
         }
 
         // --- МУСОР ---
         function updateTrashButtons(isOut) {
-            const bOut = document.getElementById('btn-trash-out'), bCancel = document.getElementById('btn-trash-cancel');
-            if(isOut) { bOut.innerText = '✅ ПОДТВЕРЖДЕНО'; bOut.classList.replace('bg-green-600', 'bg-slate-200'); bCancel.classList.remove('hidden'); }
-            else { bOut.innerText = 'ВЫСТАВИЛ МУСОР'; bOut.classList.add('bg-green-600'); bCancel.classList.add('hidden'); }
+            const bOut = document.getElementById('btn-confirm-out'), bCancel = document.getElementById('btn-confirm-cancel');
+            if(isOut) {
+                bOut.innerText = '✅ ПОДТВЕРЖДЕНО';
+                bOut.classList.replace('bg-green-600', 'bg-slate-200');
+                bOut.classList.replace('text-white', 'text-slate-500');
+                bCancel.classList.remove('hidden');
+            } else {
+                bOut.innerText = 'ВЫСТАВИЛ ПАКЕТЫ';
+                bOut.classList.add('bg-green-600', 'text-white');
+                bOut.classList.remove('bg-slate-200', 'text-slate-500');
+                bCancel.classList.add('hidden');
+            }
         }
+
         async function trashAction(isOut) {
-            if(isOut && myData.sub_type === '5days' && myData.weekly_clicks >= 5) return tg.showAlert('Лимит на эту неделю исчерпан!');
-            const newClicks = isOut ? myData.weekly_clicks + 1 : myData.weekly_clicks - 1;
-            await sb.from('clients').update({ trash_out_today: isOut, weekly_clicks: newClicks }).eq('tg_id', myData.tg_id);
-            myData.weekly_clicks = newClicks;
+            if(isOut && user.sub === '5days' && user.clicks >= 5) {
+                document.getElementById('error-limit-msg').classList.remove('hidden');
+                return tg.HapticFeedback.notificationOccurred('error');
+            }
+
+            const newClicks = isOut ? user.clicks + 1 : user.clicks - 1;
+            await sb.from('clients').update({ trash_out_today: isOut, weekly_clicks: newClicks }).eq('tg_id', user.id);
+            
+            user.clicks = newClicks;
             updateTrashButtons(isOut);
-            const text = isOut ? `🔔 ВЫСТАВИЛ: ${myData.addr}` : `❌ ОТМЕНА: ${myData.addr}`;
+            
+            const text = isOut ? `🔔 ВЫСТАВИЛ: ${user.addr}` : `❌ ОТМЕНА: ${user.addr}`;
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
-            if(isOut) { tg.HapticFeedback.notificationOccurred('success'); setTimeout(() => tg.close(), 1200); }
+            
+            if(isOut) {
+                tg.HapticFeedback.notificationOccurred('success');
+                setTimeout(() => tg.close(), 1200);
+            }
         }
 
         // --- МАГАЗИН ---
-        function filterShop(cat) { curCat = cat; document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('cat-active', b.id === 'cat-'+cat)); loadProducts(); }
+        function filterShop(cat) {
+            curCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('cat-active', b.id === 'cat-'+cat));
+            loadProducts();
+        }
+
         async function loadProducts() {
             let q = sb.from('products').select('*').order('id', {ascending: false});
             if(curCat !== 'Все') q = q.eq('category', curCat);
             const { data } = await q;
-            const box = document.getElementById('shop-items');
+            
+            const box = document.getElementById('shop-items-container');
             box.innerHTML = data.map(p => `
-                <div class="bg-white p-4 rounded-[2rem] border relative flex flex-col h-full active:scale-95 transition-all shadow-sm">
-                    ${myData.isAdmin ? `<button onclick="deleteProduct(${p.id})" class="absolute top-2 right-2 bg-red-100 text-red-600 p-1 rounded-full text-[8px] font-black uppercase">Удалить</button>` : ''}
-                    <img src="${p.image_url}" class="h-24 w-full object-contain mb-3 rounded-2xl bg-slate-50 p-2">
-                    <h4 class="text-[10px] font-black uppercase tracking-tighter leading-tight flex-grow">${p.name}</h4>
+                <div class="bg-white p-4 rounded-[2rem] border relative flex flex-col h-full shadow-sm active:scale-95 transition-all">
+                    ${user.isAdmin ? `<button onclick="deleteProduct(${p.id})" class="absolute top-2 right-2 bg-red-50 text-red-600 p-1.5 rounded-full text-[7px] font-black uppercase">Удалить</button>` : ''}
+                    <img src="${p.image_url}" class="h-24 w-full object-contain mb-3 bg-slate-50 rounded-2xl p-2">
+                    <h4 class="text-[10px] font-black uppercase text-slate-700 leading-tight flex-grow italic">${p.name}</h4>
                     <div class="mt-4 flex items-center justify-between">
-                        <span class="font-black text-sm text-green-600 italic">${p.price}₽</span>
-                        <button onclick="addToCart(${p.id}, '${p.name}', ${p.price})" class="bg-slate-900 text-white w-9 h-9 rounded-full font-bold shadow-lg">+</button>
+                        <span class="font-black text-sm text-green-600 italic">${p.price} ₽</span>
+                        <button onclick="addToCart('${p.name}', ${p.price})" class="bg-slate-900 text-white w-9 h-9 rounded-full font-bold shadow-lg shadow-slate-200">+</button>
                     </div>
                 </div>
             `).join('');
         }
-        function addToCart(id, name, price) { myData.cart.push({cid: Date.now(), name, price}); document.getElementById('cart-count').innerText = myData.cart.length; tg.HapticFeedback.impactOccurred('medium'); }
-        function toggleCart() {
-            document.getElementById('modal-cart').classList.toggle('hidden');
-            const list = document.getElementById('cart-items-list');
-            list.innerHTML = myData.cart.map(i => `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl text-xs font-bold">
-                    <span>${i.name} (${i.price}₽)</span>
-                    <button onclick="removeFromCart(${i.cid})" class="text-red-500 uppercase text-[10px]">Удалить</button>
-                </div>
-            `).join('') || '<p class="text-center py-10 italic">Пусто</p>';
+
+        function addToCart(name, price) {
+            user.cart.push({ cid: Date.now(), name, price });
+            document.getElementById('cart-count').innerText = user.cart.length;
+            tg.HapticFeedback.impactOccurred('medium');
         }
-        function removeFromCart(cid) { myData.cart = myData.cart.filter(i => i.cid !== cid); updateCartCount(); toggleCart(); toggleCart(); }
-        function updateCartCount() { document.getElementById('cart-count').innerText = myData.cart.length; }
+
+        function toggleCart() {
+            const modal = document.getElementById('modal-cart');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) renderCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cart-list');
+            const totalEl = document.getElementById('cart-total');
+            list.innerHTML = user.cart.length ? '' : '<p class="text-center text-slate-300 italic py-10">Корзина пуста</p>';
+            let total = 0;
+            user.cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                        <div class="flex flex-col"><span class="text-[11px] font-bold uppercase text-slate-700">${item.name}</span><span class="text-[10px] font-black text-green-600">${item.price} ₽</span></div>
+                        <button onclick="removeFromCart(${item.cid})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-1.5 rounded-xl">Удалить</button>
+                    </div>
+                `;
+            });
+            totalEl.innerText = total + ' ₽';
+        }
+
+        function removeFromCart(cid) {
+            user.cart = user.cart.filter(i => i.cid !== cid);
+            document.getElementById('cart-count').innerText = user.cart.length;
+            renderCart();
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
         async function placeOrder() {
-            if(!myData.cart.length) return;
-            const names = myData.cart.map(i => i.name).join(', ');
-            await sb.from('orders').insert({ client_tg_id: myData.tg_id, product_name: names });
-            tg.showAlert('Заказ принят!'); myData.cart = []; updateCartCount(); toggleCart(); showTab('home');
+            if(!user.cart.length) return;
+            const names = user.cart.map(i => i.name).join(', ');
+            await sb.from('orders').insert({ client_tg_id: user.id, product_name: names });
+            tg.showAlert('Заказ принят! Курьер свяжется с вами.');
+            user.cart = []; document.getElementById('cart-count').innerText = '0';
+            toggleCart(); showTab('home');
         }
 
         // --- АДМИН ПАНЕЛЬ ---
         async function adminAddProduct() {
-            const n = document.getElementById('adm-p-name').value, p = document.getElementById('adm-p-price').value, i = document.getElementById('adm-p-img').value, c = document.getElementById('adm-p-cat').value;
+            const n = document.getElementById('adm-name').value, p = document.getElementById('adm-price').value, i = document.getElementById('adm-img').value, c = document.getElementById('adm-cat').value;
             if(!n || !p || !i) return alert('Заполните всё!');
             await sb.from('products').insert({ name: n, price: parseInt(p), image_url: i, category: c });
-            tg.showAlert('Товар добавлен!'); loadProducts();
+            tg.showAlert('Товар добавлен в категорию: ' + c);
+            loadProducts();
+            document.getElementById('adm-name').value = ''; document.getElementById('adm-price').value = ''; document.getElementById('adm-img').value = '';
         }
-        async function deleteProduct(id) { if(confirm('Удалить?')) { await sb.from('products').delete().eq('id', id); loadProducts(); } }
+
+        async function deleteProduct(id) {
+            if(confirm('Удалить этот товар из магазина?')) {
+                await sb.from('products').delete().eq('id', id);
+                loadProducts();
+            }
+        }
+
         async function loadAdminClients() {
             const { data } = await sb.from('clients').select('*').order('created_at', {ascending: false});
-            const box = document.getElementById('admin-clients-list');
+            const box = document.getElementById('admin-clients-box');
             box.innerHTML = data.map(c => `
                 <div class="bg-white p-5 rounded-[2.5rem] border-2 border-slate-50 shadow-sm space-y-4">
                     <div class="flex justify-between items-start">
-                        <div class="flex flex-col"><span class="text-xs font-black uppercase italic">${c.name || 'Клиент'}</span><span class="text-[9px] font-bold text-slate-400">ID: ${c.tg_id}</span></div>
-                        <div class="flex gap-2">
-                             ${c.username ? `<a href="https://t.me/${c.username}" target="_blank" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase italic">Написать</a>` : ''}
-                             <button onclick="deleteClient('${c.tg_id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-xl text-[10px] font-black uppercase italic">Удалить</button>
+                        <div class="flex flex-col"><span class="text-xs font-black uppercase text-slate-800 italic">${c.name || 'Клиент'}</span><span class="text-[9px] font-bold text-slate-400">ID: ${c.tg_id}</span></div>
+                        <div class="flex gap-1">
+                             ${c.username ? `<a href="https://t.me/${c.username}" target="_blank" class="bg-blue-50 text-blue-600 px-2 py-1.5 rounded-lg text-[8px] font-black uppercase italic">Личка</a>` : ''}
+                             <button onclick="deleteClient('${c.tg_id}')" class="bg-red-50 text-red-600 px-2 py-1.5 rounded-lg text-[8px] font-black uppercase italic">Удалить</button>
                         </div>
                     </div>
-                    <div class="flex gap-1">
-                        <button onclick="activateSub('${c.tg_id}','daily')" class="bg-green-50 text-green-700 px-3 py-2 rounded-xl text-[9px] font-black uppercase italic">DAILY</button>
-                        <button onclick="activateSub('${c.tg_id}','5days')" class="bg-blue-50 text-blue-700 px-3 py-2 rounded-xl text-[9px] font-black uppercase italic">5DAYS</button>
-                        <button onclick="activateSub('${c.tg_id}','none')" class="bg-slate-100 text-slate-500 px-3 py-2 rounded-xl text-[9px] font-black uppercase italic">OFF</button>
+                    
+                    <div class="flex gap-1 justify-between bg-slate-50 p-1 rounded-xl">
+                        <button onclick="activateSub('${c.tg_id}','daily')" class="flex-grow p-2 rounded-lg text-[9px] font-black uppercase ${c.sub_type === 'daily' ? 'bg-green-600 text-white' : 'text-slate-400'}">DAILY</button>
+                        <button onclick="activateSub('${c.tg_id}','5days')" class="flex-grow p-2 rounded-lg text-[9px] font-black uppercase ${c.sub_type === '5days' ? 'bg-blue-600 text-white' : 'text-slate-400'}">5DAYS</button>
+                        <button onclick="activateSub('${c.tg_id}','none')" class="flex-grow p-2 rounded-lg text-[9px] font-black uppercase ${c.sub_type === 'none' ? 'bg-slate-300 text-white' : 'text-slate-400'}">OFF</button>
                     </div>
-                    <p class="text-[9px] font-bold uppercase tracking-widest bg-slate-50 p-3 rounded-2xl italic">${c.city} • ${c.address}</p>
-                    <div class="flex items-center gap-3">
-                        <input type="time" id="time-${c.tg_id}" value="${c.schedule || ''}" class="p-2 border rounded-xl outline-none font-black text-xs text-slate-700 shadow-sm">
-                        <button onclick="setTime('${c.tg_id}')" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-black text-[10px] uppercase italic">ОК</button>
+
+                    <p class="text-[9px] font-bold uppercase tracking-widest bg-slate-50 p-3 rounded-2xl italic text-slate-500">${c.city} • ${c.address}</p>
+                    
+                    <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border">
+                        <span class="text-[9px] font-black text-slate-300 uppercase ml-2">График:</span>
+                        <input type="time" id="time-${c.tg_id}" value="${c.schedule || ''}" class="flex-grow p-1 rounded-lg outline-none font-black text-xs text-slate-700">
+                        <button onclick="saveClientTime('${c.tg_id}')" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase italic">ОК</button>
                     </div>
                 </div>
             `).join('');
         }
-        async function activateSub(tid, type) { await sb.from('clients').update({ sub_type: type, weekly_clicks: 0 }).eq('tg_id', tid); tg.showAlert(`Тариф ${type} активирован!`); loadAdminClients(); }
-        async function setTime(tid) { 
-            const val = document.getElementById('time-'+tid).value; 
-            await sb.from('clients').update({ schedule: val }).eq('tg_id', tid); 
-            tg.HapticFeedback.notificationOccurred('success'); 
-            tg.showAlert('Время сохранено!'); loadAdminClients(); 
+
+        async function activateSub(tid, type) {
+            await sb.from('clients').update({ sub_type: type, weekly_clicks: 0 }).eq('tg_id', tid);
+            tg.showAlert(`Тариф ${type} активирован для пользователя!`);
+            loadAdminClients();
         }
-        async function deleteClient(tid) { if(confirm('Удалить?')) { await sb.from('clients').delete().eq('tg_id', tid); loadAdminClients(); } }
+
+        async function saveClientTime(tid) {
+            const time = document.getElementById('time-'+tid).value;
+            await sb.from('clients').update({ schedule: time }).eq('tg_id', tid);
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert('Время обхода сохранено!');
+            loadAdminClients();
+        }
+
+        async function deleteClient(tid) {
+            if(confirm('Удалить клиента навсегда?')) {
+                await sb.from('clients').delete().eq('tg_id', tid);
+                loadAdminClients();
+            }
+        }
     </script>
 </body>
 </html>
