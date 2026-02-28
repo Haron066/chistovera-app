@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ЧистоВера - Сервис заботы</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f3f4f6; font-family: sans-serif; }
+        .active-tab { color: #10b981; border-top: 3px solid #10b981; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Шапка -->
+    <header class="bg-white p-4 shadow-sm text-center">
+        <h1 class="text-xl font-bold text-gray-800">ЧистоВера</h1>
+        <p class="text-xs text-gray-500">Магас • Назрань</p>
+    </header>
+
+    <!-- Основной контент -->
+    <main id="app" class="flex-grow p-4">
+        
+        <!-- Выбор города (показывается первым) -->
+        <div id="city-selection" class="space-y-4">
+            <h2 class="text-lg font-semibold text-center mt-10">Выберите ваш город:</h2>
+            <button onclick="selectCity('Магас')" class="w-full bg-white p-6 rounded-2xl shadow-md flex items-center justify-between border-2 border-transparent active:border-green-500 transition-all">
+                <span class="text-xl font-medium">🏙 Магас</span>
+                <span class="text-green-500">→</span>
+            </button>
+            <button onclick="selectCity('Назрань')" class="w-full bg-white p-6 rounded-2xl shadow-md flex items-center justify-between border-2 border-transparent active:border-green-500 transition-all">
+                <span class="text-xl font-medium">🏡 Назрань</span>
+                <span class="text-green-500">→</span>
+            </button>
+        </div>
+
+        <!-- Главный экран (скрыт по умолчанию) -->
+        <div id="main-screen" class="hidden space-y-4">
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl shadow-sm">
+                <p class="text-sm text-green-700">Ваша подписка: <span class="font-bold">Не активна</span></p>
+                <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold">Оформить на месяц</button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800">🗑 Вынос мусора</h3>
+                    <p class="text-xs text-gray-500 mt-1">График в вашем доме: 13:00</p>
+                    <button id="trash-btn" onclick="confirmTrash()" class="w-full mt-3 bg-gray-100 py-3 rounded-xl font-medium text-gray-600">Мусор выставлен?</button>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800">👶 Детские товары</h3>
+                    <p class="text-xs text-gray-500 mt-1">Доставка бесконтактно до двери</p>
+                    <button class="w-full mt-3 bg-blue-500 text-white py-3 rounded-xl font-medium shadow-lg shadow-blue-100">Перейти в магазин</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Нижнее меню -->
+    <nav class="bg-white border-t border-gray-200 flex justify-around p-2 pb-6">
+        <button class="flex flex-col items-center p-2 active-tab">
+            <span class="text-xs mt-1 italic">Главная</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <span class="text-xs mt-1">Заказы</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <span class="text-xs mt-1">Профиль</span>
+        </button>
+    </nav>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Расширяем приложение на весь экран
+
+        function selectCity(city) {
+            document.getElementById('city-selection').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            tg.MainButton.setText('Выбран город: ' + city).show();
+        }
+
+        function confirmTrash() {
+            const btn = document.getElementById('trash-btn');
+            btn.innerText = '✅ Да, выставлен';
+            btn.classList.remove('bg-gray-100');
+            btn.classList.add('bg-green-100', 'text-green-600');
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+    </script>
+</body>
+</html>
