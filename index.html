@@ -91,8 +91,11 @@
                 <div id="block-trash-confirm" class="hidden mt-4 space-y-2">
                     <button id="btn-confirm-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 uppercase italic tracking-tighter disabled:opacity-50">Выставил пакеты</button>
                     <button id="btn-confirm-cancel" onclick="trashAction(false)" class="hidden w-full bg-white border-2 border-red-500 text-red-500 py-3 rounded-2xl font-bold text-[10px] uppercase italic">Отменить подтверждение</button>
-                    <p id="error-limit-msg" class="hidden text-center text-red-600 text-[10px] font-black uppercase mt-2 italic">Лимит 5 раз на этой неделе исчерпан!</p>
+                    
                     <p id="error-expired-msg" class="hidden text-center text-red-600 text-[11px] font-black uppercase mt-2 italic">ПОДПИСКА ИСТЕКЛА! Оплатите продление.</p>
+                    <button id="btn-renew-sub" onclick="renewSubscription()" class="hidden w-full bg-blue-500 text-white py-4 rounded-2xl font-black shadow-lg shadow-blue-100 uppercase italic tracking-tighter">💳 Продлить подписку</button>
+                    
+                    <p id="error-limit-msg" class="hidden text-center text-red-600 text-[10px] font-black uppercase mt-2 italic">Лимит 5 раз на этой неделе исчерпан!</p>
                 </div>
             </div>
 
@@ -274,6 +277,17 @@
             });
         }
 
+        // --- ПРОДЛЕНИЕ ПОДПИСКИ ---
+        function renewSubscription() {
+            tg.showConfirm(`Перейти в Сбербанк Онлайн для оплаты продления подписки?`, (confirm) => {
+                if(confirm) {
+                    const text = `💳 ПРОДЛЕНИЕ ПОДПИСКИ!\n\n👤 Имя: ${user.name}\n📍 Адрес: ${user.addr}\n\nКлиент перешел по ссылке для продления. После получения денег обновите дату в админке!`;
+                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
+                    tg.openLink(SBER_URL);
+                }
+            });
+        }
+
         // --- ВКЛАДКИ ---
         async function showTab(t) {
             const screens = ['tab-home', 'tab-shop', 'tab-admin', 'screen-city', 'screen-address', 'screen-tariffs'];
@@ -343,8 +357,9 @@
             const bOut = document.getElementById('btn-confirm-out');
             const bCancel = document.getElementById('btn-confirm-cancel');
             const msgExp = document.getElementById('error-expired-msg');
+            const bRenew = document.getElementById('btn-renew-sub');
 
-            // Если подписка истекла, блокируем всё
+            // Если подписка истекла, блокируем кнопку вывоза и показываем кнопку продления
             if(user.isExpired) {
                 bOut.disabled = true;
                 bOut.innerText = 'ПОДПИСКА ЗАКОНЧИЛАСЬ';
@@ -352,10 +367,12 @@
                 bOut.classList.add('bg-slate-300', 'text-slate-500', 'opacity-50');
                 bCancel.classList.add('hidden');
                 msgExp.classList.remove('hidden');
+                bRenew.classList.remove('hidden');
                 return;
             } else {
                 bOut.disabled = false;
                 msgExp.classList.add('hidden');
+                bRenew.classList.add('hidden');
             }
 
             if(isOut) {
@@ -422,7 +439,7 @@
         }
 
         function addToCart(name, price) {
-            user.cart.push({ cid: Date.now(), name, price });
+            user.cart.push({ name, price });
             document.getElementById('cart-count').innerText = user.cart.length;
             tg.HapticFeedback.impactOccurred('medium');
         }
@@ -438,16 +455,25 @@
             const totalEl = document.getElementById('cart-total');
             list.innerHTML = user.cart.length ? '' : '<p class="text-center text-slate-300 italic py-10">Корзина пуста</p>';
             let total = 0;
-            user.cart.forEach(item => {
+            
+            // Исправленная логика удаления из корзины (по индексу массива)
+            user.cart.forEach((item, index) => {
                 total += item.price;
                 list.innerHTML += `
                     <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
                         <div class="flex flex-col"><span class="text-[11px] font-bold uppercase text-slate-700">${item.name}</span><span class="text-[10px] font-black text-green-600">${item.price} ₽</span></div>
-                        <button onclick="removeFromCart(${item.cid})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-1.5 rounded-xl">Удалить</button>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 px-3 py-1.5 rounded-xl active:scale-95 transition-all">Удалить</button>
                     </div>
                 `;
             });
             totalEl.innerText = total + ' ₽';
+        }
+
+        function removeFromCart(index) {
+            user.cart.splice(index, 1); // Надежное удаление элемента по его позиции
+            document.getElementById('cart-count').innerText = user.cart.length;
+            renderCart();
+            tg.HapticFeedback.impactOccurred('light');
         }
 
         async function placeOrder() {
