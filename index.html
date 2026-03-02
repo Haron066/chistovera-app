@@ -150,6 +150,15 @@
                     <button onclick="adminAddProduct()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black uppercase tracking-widest italic text-sm shadow-lg">Опубликовать</button>
                 </div>
             </div>
+            
+            <!-- МАССОВАЯ РАССЫЛКА -->
+            <div class="bg-blue-50 p-6 rounded-[2.5rem] shadow-sm border border-blue-100">
+                <h3 class="font-black text-[10px] mb-4 uppercase text-blue-500 tracking-widest text-center italic underline underline-offset-4">Рассылка всем клиентам</h3>
+                <div class="space-y-3">
+                    <textarea id="adm-broadcast-text" rows="3" placeholder="Введите текст акции или новости..." class="w-full p-4 rounded-2xl bg-white border-none text-sm font-bold resize-none shadow-inner"></textarea>
+                    <button onclick="adminBroadcast()" class="w-full bg-blue-600 text-white p-4 rounded-xl font-black uppercase tracking-widest italic text-sm shadow-lg active:scale-95 transition-all">📢 Отправить всем</button>
+                </div>
+            </div>
 
             <!-- Управление заказами -->
             <div class="space-y-4">
@@ -609,6 +618,39 @@
                 await sb.from('clients').delete().eq('tg_id', tid);
                 loadAdminClients();
             }
+        }
+        // --- МАССОВАЯ РАССЫЛКА (АДМИН) ---
+        async function adminBroadcast() {
+            const text = document.getElementById('adm-broadcast-text').value;
+            if(!text) return tg.showAlert('Введите текст сообщения!');
+            
+            if(!confirm('ВНИМАНИЕ! Отправить это сообщение ВСЕМ клиентам в базе?')) return;
+
+            // Достаем всех клиентов
+            const { data } = await sb.from('clients').select('tg_id');
+            if(!data || data.length === 0) return tg.showAlert('База клиентов пуста.');
+
+            tg.showAlert(`Начинаю рассылку для ${data.length} клиентов...`);
+
+            let successCount = 0;
+            // Рассылаем по очереди
+            for(let client of data) {
+                try {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ chat_id: client.tg_id, text: text, parse_mode: 'HTML' })
+                    });
+                    successCount++;
+                    // Обязательная пауза 50 миллисекунд (защита от бана Телеграма за спам)
+                    await new Promise(r => setTimeout(r, 50));
+                } catch(e) {
+                    console.error('Ошибка отправки', e);
+                }
+            }
+            
+            tg.showAlert(`✅ Рассылка завершена! Успешно доставлено: ${successCount} из ${data.length}`);
+            document.getElementById('adm-broadcast-text').value = ''; // Очищаем поле
         }
     </script>
 </body>
