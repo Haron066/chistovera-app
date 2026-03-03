@@ -23,7 +23,10 @@
             <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase leading-none">ЧИСТОВЕРА</h1>
             <p id="top-city-label" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ингушетия</p>
         </div>
-        <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg">Админ-панель</button>
+        <div class="flex gap-2">
+            <button id="courier-nav-btn" onclick="showTab('courier')" class="hidden bg-orange-500 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg active:scale-95">Маршрут</button>
+            <button id="admin-nav-btn" onclick="showTab('admin')" class="hidden bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-lg active:scale-95">Админка</button>
+        </div>
     </header>
 
     <main class="p-4">
@@ -45,7 +48,6 @@
                     <input id="in-house" type="text" placeholder="Дом" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                     <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                 </div>
-                <!-- ДОБАВЛЕНЫ ПОДЪЕЗД И ДОМОФОН -->
                 <div class="flex gap-2">
                     <input id="in-entrance" type="text" placeholder="Подъезд" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                     <input id="in-intercom" type="text" placeholder="Домофон" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
@@ -90,7 +92,7 @@
                 <div class="p-8 rounded-3xl bg-slate-50 text-center border border-slate-100 mt-2">
                     <p class="text-[9px] text-slate-400 mb-1 font-bold uppercase tracking-widest italic">Время вашего обхода</p>
                     <p id="display-schedule-time" class="text-4xl font-black text-slate-800 italic uppercase leading-none">Ожидание...</p>
-                    <p id="hint-schedule" class="text-[9px] text-slate-400 mt-3 font-bold uppercase italic">Выставьте пакеты до⬆️</p>
+                    <p id="hint-schedule" class="text-[9px] text-slate-400 mt-3 font-bold uppercase italic">Админ скоро назначит график</p>
                 </div>
                 
                 <div id="block-trash-confirm" class="hidden mt-4 space-y-2">
@@ -120,7 +122,6 @@
                 <button onclick="toggleCart()" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic">🛒 Корзина (<span id="cart-count">0</span>)</button>
             </div>
             
-            <!-- Категории -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="filterShop('Все')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest cat-active" id="cat-Все">Все</button>
                 <button onclick="filterShop('Подгузники')" class="cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-white border text-[10px] font-black uppercase tracking-widest" id="cat-Подгузники">Подгузники</button>
@@ -132,13 +133,43 @@
             <div id="shop-items-container" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
+        <!-- ЭКРАН: ПАНЕЛЬ КУРЬЕРА -->
+        <div id="tab-courier" class="hidden space-y-4 pt-2 pb-24">
+            <div class="bg-orange-500 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center mb-4">
+                <h2 class="text-sm font-black uppercase italic tracking-widest leading-none">Маршрут курьера<br><span class="text-[9px] opacity-80">Пакеты за дверью</span></h2>
+                <button onclick="loadCourierClients()" class="bg-white/20 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase backdrop-blur-md">Обновить</button>
+            </div>
+            
+            <!-- Список адресов для вывоза -->
+            <div id="courier-clients-box" class="space-y-3">
+                <p class="text-center text-slate-400 italic py-10 text-[10px] uppercase font-bold tracking-widest">Загрузка маршрута...</p>
+            </div>
+        </div>
+
         <!-- ЭКРАН: АДМИН ПАНЕЛЬ -->
-        <div id="tab-admin" class="hidden space-y-8 pb-24">
+        <div id="tab-admin" class="hidden space-y-6 pb-24">
             <div class="bg-red-600 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none">Админ-панель <br><span class="text-[9px] opacity-60">Управление ЧистоВера</span></h2>
                 <button onclick="showTab('home')" class="bg-white/20 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase backdrop-blur-md border border-white/30">Выйти</button>
             </div>
             
+            <!-- ДАШБОРД (СТАТИСТИКА) -->
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center flex flex-col justify-center">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-tight mb-1">Активных<br>клиентов</p>
+                    <p id="dash-active" class="text-xl font-black text-green-600 italic">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center flex flex-col justify-center">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-tight mb-1">Выставлено<br>пакетов</p>
+                    <p id="dash-trash" class="text-xl font-black text-orange-500 italic">0</p>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center flex flex-col justify-center">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-tight mb-1">Заказов<br>в магазине</p>
+                    <p id="dash-orders" class="text-xl font-black text-blue-600 italic">0</p>
+                </div>
+            </div>
+            <hr class="border-slate-200">
+
             <!-- Добавить товар -->
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border-2 border-slate-100">
                 <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest text-center italic underline underline-offset-4">Новый товар в магазин</h3>
@@ -214,6 +245,10 @@
         const sb = supabase.createClient(S_URL, S_KEY);
 
         const ADMIN_ID = '593064482';
+        
+        // ⚠️ ВПИШИ СЮДА ID КУРЬЕРА (узнать ID можно через любого бота, например @getmyid_bot)
+        const COURIER_ID = 'ID_ТВОЕГО_КУРЬЕРА_СЮДА'; 
+        
         const BOT_TOKEN = '8270034848:AAF9wQm0meVJ1jeflutjZfOO3OTG-_3QLfk';
         const SBER_URL = 'https://www.sberbank.com/sms/pbpn?requisiteNumber=79380061001';
 
@@ -222,14 +257,22 @@
             id: String(tg.initDataUnsafe?.user?.id || '593064482'), 
             name: tg.initDataUnsafe?.user?.first_name || 'Клиент',
             username: tg.initDataUnsafe?.user?.username || '',
-            city: '', addr: '', sub: 'none', sub_end: null, clicks: 0, cart: [], isAdmin: false, isExpired: false
+            city: '', addr: '', sub: 'none', sub_end: null, clicks: 0, cart: [], isAdmin: false, isCourier: false, isExpired: false
         };
 
         // --- ИНИЦИАЛИЗАЦИЯ ---
         async function init() {
+            // Проверка ролей
             if(user.id === ADMIN_ID) {
                 user.isAdmin = true;
+                user.isCourier = true; // Админ тоже может видеть вкладку курьера
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
+                document.getElementById('courier-nav-btn').classList.remove('hidden');
+            } else if (user.id === COURIER_ID) {
+                user.isCourier = true;
+                // Курьеру сразу открываем его панель, минуя всё остальное
+                showTab('courier'); 
+                return;
             }
 
             const { data } = await sb.from('clients').select('*').eq('tg_id', user.id).single();
@@ -264,23 +307,21 @@
             document.getElementById('screen-city').classList.remove('hidden');
         }
         
-        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ СОБИРАЕТ ПОДЪЕЗД И ДОМОФОН ---
         async function finishReg() {
             const s = document.getElementById('in-street').value;
             const h = document.getElementById('in-house').value;
             const f = document.getElementById('in-flat').value;
-            const ent = document.getElementById('in-entrance').value; // Подъезд
-            const int = document.getElementById('in-intercom').value; // Домофон
+            const ent = document.getElementById('in-entrance').value;
+            const int = document.getElementById('in-intercom').value;
 
             if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома!');
             
-            // Склеиваем адрес
             let fullAddress = `${s}, д.${h}`;
             if (f) fullAddress += `, кв.${f}`;
             if (ent) fullAddress += `, под.${ent}`;
             if (int) fullAddress += `, домофон: ${int}`;
 
-            user.addr = fullAddress; // Сохраняем готовую длинную строку
+            user.addr = fullAddress;
             
             await sb.from('clients').upsert({ 
                 tg_id: user.id, city: user.city, address: user.addr, name: user.name, username: user.username 
@@ -293,7 +334,6 @@
             }
         }
 
-        // --- ТАРИФЫ ---
         function selectTariff(type, price) {
             tg.showConfirm(`Вы выбрали тариф за ${price}₽. Перейти в Сбербанк Онлайн для оплаты?`, (confirm) => {
                 if(confirm) {
@@ -305,7 +345,6 @@
             });
         }
 
-        // --- ПРОДЛЕНИЕ ПОДПИСКИ ---
         function renewSubscription() {
             tg.showConfirm(`Перейти в Сбербанк Онлайн для оплаты продления подписки?`, (confirm) => {
                 if(confirm) {
@@ -316,60 +355,67 @@
             });
         }
 
-        // --- ВКЛАДКИ ---
+        // --- ВКЛАДКИ И ЛОГИКА ---
         async function showTab(t) {
-            const screens = ['tab-home', 'tab-shop', 'tab-admin', 'screen-city', 'screen-address', 'screen-tariffs'];
+            const screens = ['tab-home', 'tab-shop', 'tab-admin', 'tab-courier', 'screen-city', 'screen-address', 'screen-tariffs'];
             screens.forEach(id => document.getElementById(id)?.classList.add('hidden'));
             
             document.getElementById('tab-' + t).classList.remove('hidden');
-            document.getElementById('navbar').classList.toggle('hidden', t === 'admin');
+            
+            // Если курьер, скрываем нижнее меню
+            if(user.id === COURIER_ID) {
+                document.getElementById('navbar').classList.add('hidden');
+            } else {
+                document.getElementById('navbar').classList.toggle('hidden', t === 'admin' || t === 'courier');
+            }
 
             document.getElementById('nav-home').classList.remove('active-nav');
             document.getElementById('nav-shop').classList.remove('active-nav');
-            if(t !== 'admin') document.getElementById('nav-' + t).classList.add('active-nav');
+            if(t !== 'admin' && t !== 'courier') document.getElementById('nav-' + t).classList.add('active-nav');
 
             if(t === 'home') {
                 const { data } = await sb.from('clients').select('*').eq('tg_id', user.id).single();
-                user.clicks = data.weekly_clicks;
-                user.sub = data.sub_type;
-                user.sub_end = data.sub_end_date;
-                
-                const badge = document.getElementById('badge-sub-type');
-                badge.innerText = `Тариф: ${user.sub === 'daily' ? 'Ежедневный' : (user.sub === '5days' ? '5 дней' : 'Не активен')}`;
-                
-                // Проверка даты подписки
-                const dateLabel = document.getElementById('label-sub-end');
-                user.isExpired = false;
-                if (user.sub !== 'none' && user.sub_end) {
-                    const endDate = new Date(user.sub_end);
-                    endDate.setHours(0,0,0,0);
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
+                if(data) {
+                    user.clicks = data.weekly_clicks;
+                    user.sub = data.sub_type;
+                    user.sub_end = data.sub_end_date;
+                    
+                    const badge = document.getElementById('badge-sub-type');
+                    badge.innerText = `Тариф: ${user.sub === 'daily' ? 'Ежедневный' : (user.sub === '5days' ? '5 дней' : 'Не активен')}`;
+                    
+                    const dateLabel = document.getElementById('label-sub-end');
+                    user.isExpired = false;
+                    if (user.sub !== 'none' && user.sub_end) {
+                        const endDate = new Date(user.sub_end);
+                        endDate.setHours(0,0,0,0);
+                        const today = new Date();
+                        today.setHours(0,0,0,0);
 
-                    dateLabel.innerText = `Действует до: ${endDate.toLocaleDateString('ru-RU')}`;
-                    dateLabel.classList.remove('hidden', 'text-red-500');
-                    dateLabel.classList.add('text-slate-500');
+                        dateLabel.innerText = `Действует до: ${endDate.toLocaleDateString('ru-RU')}`;
+                        dateLabel.classList.remove('hidden', 'text-red-500');
+                        dateLabel.classList.add('text-slate-500');
 
-                    if (endDate < today) {
-                        user.isExpired = true;
-                        dateLabel.innerText += ' (ИСТЕКЛА)';
-                        dateLabel.classList.remove('text-slate-500');
-                        dateLabel.classList.add('text-red-500');
+                        if (endDate < today) {
+                            user.isExpired = true;
+                            dateLabel.innerText += ' (ИСТЕКЛА)';
+                            dateLabel.classList.remove('text-slate-500');
+                            dateLabel.classList.add('text-red-500');
+                        }
+                    } else {
+                        dateLabel.classList.add('hidden');
                     }
-                } else {
-                    dateLabel.classList.add('hidden');
-                }
 
-                if(user.sub === '5days') {
-                    const lc = document.getElementById('label-weekly-limit');
-                    lc.classList.remove('hidden');
-                    lc.innerText = `Выносов на неделе: ${user.clicks}/5`;
-                }
+                    if(user.sub === '5days') {
+                        const lc = document.getElementById('label-weekly-limit');
+                        lc.classList.remove('hidden');
+                        lc.innerText = `Выносов на неделе: ${user.clicks}/5`;
+                    }
 
-                document.getElementById('display-schedule-time').innerText = data.schedule || 'Ожидание...';
-                if(data.schedule) {
-                    document.getElementById('block-trash-confirm').classList.remove('hidden');
-                    updateTrashButtons(data.trash_out_today);
+                    document.getElementById('display-schedule-time').innerText = data.schedule || 'Ожидание...';
+                    if(data.schedule) {
+                        document.getElementById('block-trash-confirm').classList.remove('hidden');
+                        updateTrashButtons(data.trash_out_today);
+                    }
                 }
             }
             if(t === 'shop') loadProducts();
@@ -377,17 +423,18 @@
                 loadAdminClients();
                 loadAdminOrders();
             }
+            if(t === 'courier') {
+                loadCourierClients();
+            }
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // --- МУСОР ---
         function updateTrashButtons(isOut) {
             const bOut = document.getElementById('btn-confirm-out');
             const bCancel = document.getElementById('btn-confirm-cancel');
             const msgExp = document.getElementById('error-expired-msg');
             const bRenew = document.getElementById('btn-renew-sub');
 
-            // Если подписка истекла, блокируем кнопку вывоза и показываем кнопку продления
             if(user.isExpired) {
                 bOut.disabled = true;
                 bOut.innerText = 'ПОДПИСКА ЗАКОНЧИЛАСЬ';
@@ -516,6 +563,42 @@
             toggleCart(); showTab('home');
         }
 
+        // --- ПАНЕЛЬ КУРЬЕРА ---
+        async function loadCourierClients() {
+            const { data } = await sb.from('clients').select('*').eq('trash_out_today', true).order('schedule', {ascending: true});
+            const box = document.getElementById('courier-clients-box');
+            
+            if(!data || data.length === 0) {
+                box.innerHTML = '<p class="text-center text-slate-400 italic py-10 text-[10px] uppercase font-bold tracking-widest">На данный момент пакетов нет 🎉</p>';
+                return;
+            }
+
+            box.innerHTML = data.map(c => `
+                <div class="bg-white p-4 rounded-[2rem] border-l-4 border-orange-500 shadow-sm flex justify-between items-center gap-3">
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest">${c.schedule || 'Без времени'}</span>
+                            <span class="text-[9px] font-bold text-slate-400">${c.city}</span>
+                        </div>
+                        <p class="text-[11px] font-black italic text-slate-800 leading-tight">${c.address}</p>
+                        <p class="text-[9px] font-bold text-slate-500 mt-1">${c.name || 'Клиент'} • ID: ${c.tg_id}</p>
+                    </div>
+                    <button onclick="courierPickedUp('${c.tg_id}')" class="bg-green-100 text-green-700 h-12 w-16 rounded-[1rem] text-[9px] font-black uppercase active:scale-95 transition-all flex flex-col items-center justify-center flex-shrink-0 shadow-sm border border-green-200">
+                        <span class="text-sm">✅</span> Забрал
+                    </button>
+                </div>
+            `).join('');
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        // Кнопка "ЗАБРАЛ" у курьера
+        async function courierPickedUp(tid) {
+            await sb.from('clients').update({ trash_out_today: false }).eq('tg_id', tid);
+            tg.HapticFeedback.notificationOccurred('success');
+            loadCourierClients(); // Сразу обновляем список курьера
+            if(user.isAdmin) loadAdminClients(); // Если админ, обновляем и дашборд в фоне
+        }
+
         // --- АДМИН ПАНЕЛЬ ---
         async function adminAddProduct() {
             const n = document.getElementById('adm-name').value, p = document.getElementById('adm-price').value, i = document.getElementById('adm-img').value, c = document.getElementById('adm-cat').value;
@@ -536,6 +619,10 @@
         // Заказы (Админ)
         async function loadAdminOrders() {
             const { data } = await sb.from('orders').select('*').order('created_at', {ascending: false});
+            
+            // Обновляем дашборд
+            if(user.isAdmin) document.getElementById('dash-orders').innerText = data ? data.length : 0;
+
             const box = document.getElementById('admin-orders-box');
             if(!data || data.length === 0) {
                 box.innerHTML = '<p class="text-[10px] text-slate-400 italic px-2">Нет активных заказов</p>';
@@ -562,6 +649,29 @@
         // Клиенты (Админ)
         async function loadAdminClients() {
             const { data } = await sb.from('clients').select('*').order('created_at', {ascending: false});
+            
+            // Обновление Дашборда
+            if(user.isAdmin) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                let activeCount = 0;
+                let trashCount = 0;
+
+                data.forEach(c => {
+                    let isActive = c.sub_type !== 'none';
+                    if (isActive && c.sub_end_date) {
+                        const eDate = new Date(c.sub_end_date);
+                        eDate.setHours(0,0,0,0);
+                        if (eDate < today) isActive = false;
+                    }
+                    if(isActive) activeCount++;
+                    if(c.trash_out_today) trashCount++;
+                });
+
+                document.getElementById('dash-active').innerText = activeCount;
+                document.getElementById('dash-trash').innerText = trashCount;
+            }
+
             const box = document.getElementById('admin-clients-box');
             box.innerHTML = data.map(c => `
                 <div class="bg-white p-5 rounded-[2.5rem] border-2 border-slate-50 shadow-sm space-y-4">
@@ -636,6 +746,7 @@
                 loadAdminClients();
             }
         }
+        
         // --- МАССОВАЯ РАССЫЛКА (АДМИН) ---
         async function adminBroadcast() {
             const text = document.getElementById('adm-broadcast-text').value;
