@@ -45,6 +45,11 @@
                     <input id="in-house" type="text" placeholder="Дом" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                     <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                 </div>
+                <!-- ДОБАВЛЕНЫ ПОДЪЕЗД И ДОМОФОН -->
+                <div class="flex gap-2">
+                    <input id="in-entrance" type="text" placeholder="Подъезд" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
+                    <input id="in-intercom" type="text" placeholder="Домофон" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
+                </div>
             </div>
             <button onclick="finishReg()" id="reg-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить адрес</button>
         </div>
@@ -258,11 +263,25 @@
             document.getElementById('screen-address').classList.add('hidden');
             document.getElementById('screen-city').classList.remove('hidden');
         }
+        
+        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ СОБИРАЕТ ПОДЪЕЗД И ДОМОФОН ---
         async function finishReg() {
-            const s = document.getElementById('in-street').value, h = document.getElementById('in-house').value, f = document.getElementById('in-flat').value;
+            const s = document.getElementById('in-street').value;
+            const h = document.getElementById('in-house').value;
+            const f = document.getElementById('in-flat').value;
+            const ent = document.getElementById('in-entrance').value; // Подъезд
+            const int = document.getElementById('in-intercom').value; // Домофон
+
             if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома!');
             
-            user.addr = `${s}, д.${h}, кв.${f}`;
+            // Склеиваем адрес
+            let fullAddress = `${s}, д.${h}`;
+            if (f) fullAddress += `, кв.${f}`;
+            if (ent) fullAddress += `, под.${ent}`;
+            if (int) fullAddress += `, домофон: ${int}`;
+
+            user.addr = fullAddress; // Сохраняем готовую длинную строку
+            
             await sb.from('clients').upsert({ 
                 tg_id: user.id, city: user.city, address: user.addr, name: user.name, username: user.username 
             });
@@ -465,7 +484,6 @@
             list.innerHTML = user.cart.length ? '' : '<p class="text-center text-slate-300 italic py-10">Корзина пуста</p>';
             let total = 0;
             
-            // Исправленная логика удаления из корзины (по индексу массива)
             user.cart.forEach((item, index) => {
                 total += item.price;
                 list.innerHTML += `
@@ -479,7 +497,7 @@
         }
 
         function removeFromCart(index) {
-            user.cart.splice(index, 1); // Надежное удаление элемента по его позиции
+            user.cart.splice(index, 1);
             document.getElementById('cart-count').innerText = user.cart.length;
             renderCart();
             tg.HapticFeedback.impactOccurred('light');
@@ -583,13 +601,12 @@
         async function activateSub(tid, type) {
             let updateData = { sub_type: type, weekly_clicks: 0 };
             
-            // Если включили тариф, автоматом даем 30 дней от сегодня
             if(type !== 'none') {
                 const futureDate = new Date();
                 futureDate.setDate(futureDate.getDate() + 30);
                 updateData.sub_end_date = futureDate.toISOString().split('T')[0];
             } else {
-                updateData.sub_end_date = null; // Если OFF, убираем дату
+                updateData.sub_end_date = null;
             }
 
             await sb.from('clients').update(updateData).eq('tg_id', tid);
@@ -626,14 +643,12 @@
             
             if(!confirm('ВНИМАНИЕ! Отправить это сообщение ВСЕМ клиентам в базе?')) return;
 
-            // Достаем всех клиентов
             const { data } = await sb.from('clients').select('tg_id');
             if(!data || data.length === 0) return tg.showAlert('База клиентов пуста.');
 
             tg.showAlert(`Начинаю рассылку для ${data.length} клиентов...`);
 
             let successCount = 0;
-            // Рассылаем по очереди
             for(let client of data) {
                 try {
                     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -642,7 +657,6 @@
                         body: JSON.stringify({ chat_id: client.tg_id, text: text, parse_mode: 'HTML' })
                     });
                     successCount++;
-                    // Обязательная пауза 50 миллисекунд (защита от бана Телеграма за спам)
                     await new Promise(r => setTimeout(r, 50));
                 } catch(e) {
                     console.error('Ошибка отправки', e);
@@ -650,7 +664,7 @@
             }
             
             tg.showAlert(`✅ Рассылка завершена! Успешно доставлено: ${successCount} из ${data.length}`);
-            document.getElementById('adm-broadcast-text').value = ''; // Очищаем поле
+            document.getElementById('adm-broadcast-text').value = '';
         }
     </script>
 </body>
