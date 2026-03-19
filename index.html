@@ -17,7 +17,6 @@
 </head>
 <body class="bg-slate-50 font-sans min-h-screen text-slate-900 pb-24">
 
-    <!-- ШАПКА -->
     <header class="bg-white sticky top-0 z-[100] border-b p-4 flex justify-between items-center shadow-sm">
         <div>
             <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase leading-none">ЧИСТОВЕРА</h1>
@@ -30,22 +29,18 @@
     </header>
 
     <main class="p-4">
-        
-        <!-- ЭКРАН: ТЕХНИЧЕСКИЕ РАБОТЫ -->
         <div id="screen-maintenance" class="hidden h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in fade-in">
             <span class="text-6xl mb-6 animate-pulse">🛠</span>
             <h2 class="text-2xl font-black uppercase italic tracking-tighter text-slate-800 mb-2">Технические работы</h2>
             <p class="text-[11px] font-bold text-slate-500 uppercase">Бот временно остановлен для обновления системы. Пожалуйста, зайдите немного позже.</p>
         </div>
 
-        <!-- ЭКРАН 1: ВЫБОР ГОРОДА -->
         <div id="screen-city" class="hidden space-y-4 pt-10 text-center">
             <h2 class="text-2xl font-black uppercase italic tracking-tighter text-slate-800">Ваш город?</h2>
             <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏙 Магас</button>
             <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
         </div>
 
-        <!-- ЭКРАН 2: ВВОД АДРЕСА -->
         <div id="screen-address" class="hidden space-y-4 pt-4">
             <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase italic tracking-widest mb-2">← Назад к городам</button>
             <h2 class="text-xl font-black uppercase tracking-tighter">Укажите адрес</h2>
@@ -63,7 +58,6 @@
             <button onclick="finishReg()" id="reg-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить адрес</button>
         </div>
 
-        <!-- ЭКРАН 3: ВЫБОР ТАРИФА -->
         <div id="screen-tariffs" class="hidden space-y-6 pt-6">
             <h2 class="text-2xl font-black text-center uppercase italic tracking-tighter">Выберите подписку</h2>
             <div onclick="selectTariff('daily', 750)" class="bg-white p-6 rounded-[2.5rem] border-2 border-green-500 shadow-xl active:scale-95 transition-all relative">
@@ -79,7 +73,7 @@
             </div>
         </div>
 
-        <!-- ЭКРАН: ГЛАВНАЯ (Home) -->
+        <!-- ГЛАВНАЯ -->
         <div id="tab-home" class="hidden space-y-4 animate-in fade-in duration-500">
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-50 relative">
                 <div class="flex justify-between items-start mb-4">
@@ -99,12 +93,19 @@
                 <div id="block-trash-confirm" class="hidden mt-4 space-y-2">
                     <button id="btn-confirm-out" onclick="trashAction(true)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-green-100 uppercase italic tracking-tighter disabled:opacity-50 transition-all active:scale-95">Выставил пакеты</button>
                     <button id="btn-confirm-cancel" onclick="trashAction(false)" class="hidden w-full bg-white border-2 border-red-500 text-red-500 py-3 rounded-2xl font-bold text-[10px] uppercase italic active:scale-95 transition-all">Отменить подтверждение</button>
-                    
                     <p id="error-expired-msg" class="hidden text-center text-red-600 text-[11px] font-black uppercase mt-2 italic">ПОДПИСКА ИСТЕКЛА! Оплатите продление.</p>
                     <button id="btn-renew-sub" onclick="renewSubscription()" class="hidden w-full bg-blue-500 text-white py-4 rounded-2xl font-black shadow-lg shadow-blue-100 uppercase italic tracking-tighter active:scale-95 transition-all">💳 Продлить подписку</button>
-                    
                     <p id="error-limit-msg" class="hidden text-center text-red-600 text-[10px] font-black uppercase mt-2 italic">Лимит 5 раз на этой неделе исчерпан!</p>
                 </div>
+            </div>
+
+            <!-- РЕФЕРАЛЬНАЯ КНОПКА (НОВОЕ) -->
+            <div onclick="shareReferral()" class="bg-purple-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
+                <div>
+                    <h3 class="text-lg font-black uppercase italic tracking-tighter">5 дней бесплатно</h3>
+                    <p class="text-purple-200 text-[10px] opacity-90 uppercase font-bold tracking-widest mt-1">Пригласить соседа</p>
+                </div>
+                <span class="text-3xl">🎁</span>
             </div>
 
             <div onclick="showTab('shop')" class="bg-blue-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
@@ -116,7 +117,6 @@
             </div>
         </div>
 
-        <!-- ЭКРАН: МАГАЗИН -->
         <div id="tab-shop" class="hidden space-y-4 pt-2">
             <div class="flex justify-between items-center px-1">
                 <button onclick="showTab('home')" class="text-slate-400 text-[10px] font-black uppercase">← Назад</button>
@@ -133,13 +133,12 @@
             <div id="shop-items-container" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
-        <!-- ЭКРАН: ПАНЕЛЬ КУРЬЕРА -->
+        <!-- ПАНЕЛЬ КУРЬЕРА -->
         <div id="tab-courier" class="hidden space-y-6 pt-2 pb-24">
             <div class="bg-slate-900 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none text-slate-100">Рабочая панель<br><span class="text-[9px] text-slate-400">Курьер ЧистоВера</span></h2>
                 <button onclick="loadCourierData()" class="bg-white/10 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase backdrop-blur-md active:scale-95">Обновить</button>
             </div>
-            
             <div class="bg-blue-50 p-4 rounded-[2rem] border border-blue-100">
                 <h3 class="font-black text-blue-600 uppercase text-[10px] tracking-widest border-b border-blue-200 pb-1 italic px-2 mb-3">Заказы из магазина</h3>
                 <h4 class="text-[9px] font-bold text-slate-500 uppercase px-2 mb-2">Новые (Свободные)</h4>
@@ -147,7 +146,6 @@
                 <h4 class="text-[9px] font-bold text-slate-500 uppercase px-2 mb-2">Мои доставки</h4>
                 <div id="courier-orders-mine" class="space-y-2"></div>
             </div>
-
             <div class="bg-orange-50 p-4 rounded-[2rem] border border-orange-100">
                 <h3 class="font-black text-orange-600 uppercase text-[10px] tracking-widest border-b border-orange-200 pb-1 italic px-2 mb-3">Маршрут (Мусор)</h3>
                 <div id="courier-clients-active" class="space-y-3 mb-6"></div>
@@ -159,14 +157,13 @@
             </div>
         </div>
 
-        <!-- ЭКРАН: АДМИН ПАНЕЛЬ -->
+        <!-- АДМИН ПАНЕЛЬ -->
         <div id="tab-admin" class="hidden space-y-6 pb-24">
             <div class="bg-red-600 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none">Админ-панель <br><span class="text-[9px] opacity-60">Управление ЧистоВера</span></h2>
                 <button onclick="showTab('home')" class="bg-white/20 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase backdrop-blur-md border border-white/30 active:scale-95">Выйти</button>
             </div>
-
-            <!-- АВАРИЙНЫЙ РУБИЛЬНИК -->
+            
             <div class="bg-slate-900 p-6 rounded-[2.5rem] shadow-sm mb-4 border-2 border-slate-800">
                 <div class="flex justify-between items-center">
                     <div>
@@ -177,7 +174,6 @@
                 </div>
             </div>
             
-            <!-- ДАШБОРД (СТАТИСТИКА) -->
             <div class="grid grid-cols-3 gap-2">
                 <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center flex flex-col justify-center">
                     <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-tight mb-1">Активных<br>клиентов</p>
@@ -194,7 +190,6 @@
             </div>
             <hr class="border-slate-200">
 
-            <!-- Добавить товар -->
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border-2 border-slate-100">
                 <h3 class="font-black text-[10px] mb-4 uppercase text-slate-400 tracking-widest text-center italic underline underline-offset-4">Новый товар в магазин</h3>
                 <div class="space-y-3">
@@ -211,7 +206,6 @@
                 </div>
             </div>
             
-            <!-- МАССОВАЯ РАССЫЛКА -->
             <div class="bg-blue-50 p-6 rounded-[2.5rem] shadow-sm border border-blue-100">
                 <h3 class="font-black text-[10px] mb-4 uppercase text-blue-500 tracking-widest text-center italic underline underline-offset-4">Рассылка всем клиентам</h3>
                 <div class="space-y-3">
@@ -220,13 +214,11 @@
                 </div>
             </div>
 
-            <!-- Управление заказами -->
             <div class="space-y-4">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1 italic px-2">Заказы из магазина</h3>
                 <div id="admin-orders-box" class="space-y-3"></div>
             </div>
 
-            <!-- Список клиентов -->
             <div class="space-y-4">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-widest border-b pb-1 italic px-2">Управление клиентами</h3>
                 <div id="admin-clients-box" class="space-y-4"></div>
@@ -234,7 +226,7 @@
         </div>
     </main>
 
-    <!-- КОРЗИНА (MODAL) -->
+    <!-- КОРЗИНА -->
     <div id="modal-cart" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-end">
         <div class="bg-white w-full rounded-t-[3rem] p-8 max-h-[85vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom duration-300">
             <div class="flex justify-between items-center mb-6">
@@ -284,9 +276,7 @@
 
         let systemPaused = false;
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
         async function init() {
-            // Проверка рубильника
             const { data: sys } = await sb.from('app_settings').select('is_paused').eq('id', 1).single();
             if (sys) systemPaused = sys.is_paused;
 
@@ -295,16 +285,15 @@
                 user.isCourier = true; 
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
                 document.getElementById('courier-nav-btn').classList.remove('hidden');
-                updateAdminSystemBtn(); // Рисуем кнопку рубильника
+                updateAdminSystemBtn(); 
             } else if (COURIER_IDS.includes(user.id)) {
                 user.isCourier = true;
             }
 
-            // ЕСЛИ ТЕХРАБОТЫ (и это не админ)
             if (systemPaused && !user.isAdmin) {
                 document.getElementById('screen-maintenance').classList.remove('hidden');
                 document.getElementById('navbar').classList.add('hidden');
-                return; // Останавливаем загрузку всего остального!
+                return;
             }
 
             if (user.isCourier && !user.isAdmin) {
@@ -332,7 +321,13 @@
         }
         init();
 
-        // --- АВАРИЙНЫЙ РУБИЛЬНИК (АДМИН) ---
+        // --- РЕФЕРАЛЬНАЯ КНОПКА (КЛИЕНТ) ---
+        function shareReferral() {
+            const text = encodeURIComponent("Привет! 🌸 Пользуюсь сервисом ЧистоВера, они сами забирают мусор прямо из-за двери! Переходи по моей ссылке и давай с нами:");
+            const link = `https://t.me/chistovera_bot?start=${user.id}`;
+            tg.openTelegramLink(`https://t.me/share/url?url=${link}&text=${text}`);
+        }
+
         function updateAdminSystemBtn() {
             const btn = document.getElementById('adm-sys-btn');
             const txt = document.getElementById('adm-sys-status-text');
@@ -360,7 +355,6 @@
             }
         }
 
-        // --- РЕГИСТРАЦИЯ ---
         function pickCity(c) {
             user.city = c;
             document.getElementById('screen-city').classList.add('hidden');
@@ -420,7 +414,6 @@
             });
         }
 
-        // --- ВКЛАДКИ И ЛОГИКА ---
         async function showTab(t) {
             const screens = ['tab-home', 'tab-shop', 'tab-admin', 'tab-courier', 'screen-city', 'screen-address', 'screen-tariffs', 'screen-maintenance'];
             screens.forEach(id => document.getElementById(id)?.classList.add('hidden'));
@@ -551,7 +544,6 @@
             }
         }
 
-        // --- МАГАЗИН ---
         function filterShop(cat) {
             curCat = cat;
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('cat-active', b.id === 'cat-'+cat));
@@ -627,14 +619,12 @@
             toggleCart(); showTab('home');
         }
 
-        // --- ПАНЕЛЬ КУРЬЕРА (ОБЩАЯ ЗАГРУЗКА) ---
         async function loadCourierData() {
             await loadCourierClients();
             await loadCourierOrders();
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // 1. МУСОР (КУРЬЕР)
         async function loadCourierClients() {
             const { data } = await sb.from('clients').select('*').eq('trash_out_today', true).order('schedule', {ascending: true});
             const boxActive = document.getElementById('courier-clients-active');
@@ -699,7 +689,6 @@
             }
         }
 
-        // 2. ЗАКАЗЫ ИЗ МАГАЗИНА (КУРЬЕР)
         async function loadCourierOrders() {
             const { data: orders } = await sb.from('orders').select('*').order('created_at', {ascending: false});
             const { data: clients } = await sb.from('clients').select('tg_id, name, address, city');
@@ -756,7 +745,6 @@
                 loadCourierData();
             }
         }
-
 
         // --- АДМИН ПАНЕЛЬ ---
         async function adminAddProduct() {
@@ -884,6 +872,7 @@
             `).join('');
         }
 
+        // --- МАГИЯ РЕФЕРАЛОВ ПРИ ВЫДАЧЕ ТАРИФА ---
         async function activateSub(tid, type) {
             let updateData = { sub_type: type, weekly_clicks: 0 };
             
@@ -891,6 +880,37 @@
                 const futureDate = new Date();
                 futureDate.setDate(futureDate.getDate() + 30);
                 updateData.sub_end_date = futureDate.toISOString().split('T')[0];
+
+                // Проверяем, есть ли у этого клиента реферал
+                const { data: clientObj } = await sb.from('clients').select('referred_by').eq('tg_id', tid).single();
+                if(clientObj && clientObj.referred_by) {
+                    const refId = clientObj.referred_by;
+                    
+                    // Находим того, кто пригласил
+                    const { data: refObj } = await sb.from('clients').select('sub_end_date').eq('tg_id', refId).single();
+                    if(refObj && refObj.sub_end_date) {
+                        let newRefEnd = new Date(refObj.sub_end_date);
+                        if(newRefEnd < new Date()) newRefEnd = new Date(); // Если подписка кончилась, даем 5 дней от сегодня
+                        newRefEnd.setDate(newRefEnd.getDate() + 5);
+                        
+                        // Добавляем ему 5 дней в базу
+                        await sb.from('clients').update({ sub_end_date: newRefEnd.toISOString().split('T')[0] }).eq('tg_id', refId);
+                        
+                        // Отправляем радостное сообщение в ТГ
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ 
+                                chat_id: refId, 
+                                text: `🎁 <b>Поздравляем!</b>\n\nВаш друг активировал подписку!\nВам начислено <b>5 бесплатных дней</b> к вашему тарифу.`, 
+                                parse_mode: 'HTML' 
+                            })
+                        });
+                    }
+                    
+                    // Удаляем реферала, чтобы не выдавать бонус дважды
+                    updateData.referred_by = null;
+                }
             } else {
                 updateData.sub_end_date = null;
             }
