@@ -41,6 +41,7 @@
             <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
         </div>
 
+        <!-- ЭКРАН 2: ВВОД АДРЕСА (ОБНОВЛЕНО С ЭТАЖОМ) -->
         <div id="screen-address" class="hidden space-y-4 pt-4">
             <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase italic tracking-widest mb-2">← Назад к городам</button>
             <h2 class="text-xl font-black uppercase tracking-tighter">Укажите адрес</h2>
@@ -51,8 +52,9 @@
                     <input id="in-flat" type="text" placeholder="Кв" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
                 </div>
                 <div class="flex gap-2">
-                    <input id="in-entrance" type="text" placeholder="Подъезд" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
-                    <input id="in-intercom" type="text" placeholder="Домофон" class="w-1/2 p-4 rounded-2xl bg-white shadow-sm">
+                    <input id="in-entrance" type="text" placeholder="Подъезд" class="w-1/3 p-4 rounded-2xl bg-white shadow-sm text-sm">
+                    <input id="in-floor" type="text" placeholder="Этаж" class="w-1/3 p-4 rounded-2xl bg-white shadow-sm text-sm">
+                    <input id="in-intercom" type="text" placeholder="Домофон" class="w-1/3 p-4 rounded-2xl bg-white shadow-sm text-sm">
                 </div>
             </div>
             <button onclick="finishReg()" id="reg-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить адрес</button>
@@ -99,7 +101,6 @@
                 </div>
             </div>
 
-            <!-- РЕФЕРАЛЬНАЯ КНОПКА (НОВОЕ) -->
             <div onclick="shareReferral()" class="bg-purple-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
                 <div>
                     <h3 class="text-lg font-black uppercase italic tracking-tighter">5 дней бесплатно</h3>
@@ -133,7 +134,6 @@
             <div id="shop-items-container" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
-        <!-- ПАНЕЛЬ КУРЬЕРА -->
         <div id="tab-courier" class="hidden space-y-6 pt-2 pb-24">
             <div class="bg-slate-900 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none text-slate-100">Рабочая панель<br><span class="text-[9px] text-slate-400">Курьер ЧистоВера</span></h2>
@@ -242,7 +242,6 @@
         </div>
     </div>
 
-    <!-- NAVBAR -->
     <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50 shadow-2xl">
         <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-300 transition-all">
             <span class="text-2xl">🏠</span><span class="text-[9px] font-black uppercase italic">Главная</span>
@@ -260,7 +259,10 @@
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwcmVlamZmdHNwanFhcnRocGZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNzM4MDUsImV4cCI6MjA4Nzg0OTgwNX0.6u9FNjZLW3AVDY_RNLq4Dm8Yn4XC5JsI84aQlUKXI7c';
         const sb = supabase.createClient(S_URL, S_KEY);
 
-        const ADMIN_ID = '593064482';
+        // ⚠️ СПИСОК АДМИНОВ (через запятую)
+        const ADMIN_IDS = ['593064482', '8536326877'];
+        
+        // ⚠️ СПИСОК КУРЬЕРОВ (через запятую)
         const COURIER_IDS = ['ID_КУРЬЕРА_1', 'ID_КУРЬЕРА_2']; 
         
         const BOT_TOKEN = '8270034848:AAF9wQm0meVJ1jeflutjZfOO3OTG-_3QLfk';
@@ -276,11 +278,18 @@
 
         let systemPaused = false;
 
+        // ФУНКЦИЯ ДЛЯ УВЕДОМЛЕНИЯ ВСЕХ АДМИНОВ
+        function notifyAdmins(text) {
+            ADMIN_IDS.forEach(adminId => {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(text)}`);
+            });
+        }
+
         async function init() {
             const { data: sys } = await sb.from('app_settings').select('is_paused').eq('id', 1).single();
             if (sys) systemPaused = sys.is_paused;
 
-            if(user.id === ADMIN_ID) {
+            if(ADMIN_IDS.includes(user.id)) {
                 user.isAdmin = true;
                 user.isCourier = true; 
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
@@ -321,7 +330,6 @@
         }
         init();
 
-        // --- РЕФЕРАЛЬНАЯ КНОПКА (КЛИЕНТ) ---
         function shareReferral() {
             const text = encodeURIComponent("Привет! 🌸 Пользуюсь сервисом ЧистоВера, они сами забирают мусор прямо из-за двери! Переходи по моей ссылке и давай с нами:");
             const link = `https://t.me/chistovera_bot?start=${user.id}`;
@@ -371,6 +379,7 @@
             const h = document.getElementById('in-house').value;
             const f = document.getElementById('in-flat').value;
             const ent = document.getElementById('in-entrance').value;
+            const fl = document.getElementById('in-floor').value; // ЭТАЖ
             const int = document.getElementById('in-intercom').value;
 
             if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома!');
@@ -378,6 +387,7 @@
             let fullAddress = `${s}, д.${h}`;
             if (f) fullAddress += `, кв.${f}`;
             if (ent) fullAddress += `, под.${ent}`;
+            if (fl) fullAddress += `, эт.${fl}`; // ДОБАВЛЯЕМ ЭТАЖ
             if (int) fullAddress += `, домофон: ${int}`;
 
             user.addr = fullAddress;
@@ -396,8 +406,7 @@
         function selectTariff(type, price) {
             tg.showConfirm(`Вы выбрали тариф за ${price}₽. Перейти в Сбербанк Онлайн для оплаты?`, (confirm) => {
                 if(confirm) {
-                    const text = `💰 ЗАЯВКА НА ПОДПИСКУ!\n\n👤 Имя: ${user.name}\n📦 Тариф: ${type === 'daily' ? 'Ежедневный' : '5 дней'}\n💵 Сумма: ${price}₽\n📍 Адрес: ${user.addr}\n\nПосле получения денег активируйте тариф в админке!`;
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
+                    notifyAdmins(`💰 ЗАЯВКА НА ПОДПИСКУ!\n\n👤 Имя: ${user.name}\n📦 Тариф: ${type === 'daily' ? 'Ежедневный' : '5 дней'}\n💵 Сумма: ${price}₽\n📍 Адрес: ${user.addr}\n\nПосле получения денег активируйте тариф в админке!`);
                     tg.openLink(SBER_URL);
                     tg.showAlert("Ожидайте активации доступа в течение нескольких минут после оплаты.");
                 }
@@ -407,8 +416,7 @@
         function renewSubscription() {
             tg.showConfirm(`Перейти в Сбербанк Онлайн для оплаты продления подписки?`, (confirm) => {
                 if(confirm) {
-                    const text = `💳 ПРОДЛЕНИЕ ПОДПИСКИ!\n\n👤 Имя: ${user.name}\n📍 Адрес: ${user.addr}\n\nКлиент перешел по ссылке для продления. После получения денег обновите дату в админке!`;
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
+                    notifyAdmins(`💳 ПРОДЛЕНИЕ ПОДПИСКИ!\n\n👤 Имя: ${user.name}\n📍 Адрес: ${user.addr}\n\nКлиент перешел по ссылке для продления. Обновите дату в админке!`);
                     tg.openLink(SBER_URL);
                 }
             });
@@ -535,8 +543,8 @@
             user.clicks = newClicks;
             updateTrashButtons(isOut);
             
-            const text = isOut ? `🔔 ВЫСТАВИЛ: ${user.addr}` : `❌ ОТМЕНА: ${user.addr}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
+            // Уведомляем всех админов
+            notifyAdmins(isOut ? `🔔 ВЫСТАВИЛ МУСОР:\n📍 ${user.addr}` : `❌ ОТМЕНА ВЫВОЗА:\n📍 ${user.addr}`);
             
             if(isOut) {
                 tg.HapticFeedback.notificationOccurred('success');
@@ -611,8 +619,7 @@
             const names = user.cart.map(i => i.name).join(', ');
             await sb.from('orders').insert({ client_tg_id: user.id, product_name: names });
             
-            const text = `🛒 НОВЫЙ ЗАКАЗ!\n\n👤 От: ${user.name} (${user.addr})\n📦 Товары: ${names}\n\nКурьеры уже видят заказ в своей панели!`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(text)}`);
+            notifyAdmins(`🛒 НОВЫЙ ЗАКАЗ!\n\n👤 От: ${user.name} (${user.addr})\n📦 Товары: ${names}\n\nКурьеры уже видят заказ в своей панели!`);
 
             tg.showAlert('Заказ оформлен! Курьер возьмет его в работу.');
             user.cart = []; document.getElementById('cart-count').innerText = '0';
@@ -746,7 +753,6 @@
             }
         }
 
-        // --- АДМИН ПАНЕЛЬ ---
         async function adminAddProduct() {
             const n = document.getElementById('adm-name').value, p = document.getElementById('adm-price').value, i = document.getElementById('adm-img').value, c = document.getElementById('adm-cat').value;
             if(!n || !p || !i) return alert('Заполните всё!');
@@ -872,7 +878,6 @@
             `).join('');
         }
 
-        // --- МАГИЯ РЕФЕРАЛОВ ПРИ ВЫДАЧЕ ТАРИФА ---
         async function activateSub(tid, type) {
             let updateData = { sub_type: type, weekly_clicks: 0 };
             
@@ -881,22 +886,17 @@
                 futureDate.setDate(futureDate.getDate() + 30);
                 updateData.sub_end_date = futureDate.toISOString().split('T')[0];
 
-                // Проверяем, есть ли у этого клиента реферал
                 const { data: clientObj } = await sb.from('clients').select('referred_by').eq('tg_id', tid).single();
                 if(clientObj && clientObj.referred_by) {
                     const refId = clientObj.referred_by;
-                    
-                    // Находим того, кто пригласил
                     const { data: refObj } = await sb.from('clients').select('sub_end_date').eq('tg_id', refId).single();
                     if(refObj && refObj.sub_end_date) {
                         let newRefEnd = new Date(refObj.sub_end_date);
-                        if(newRefEnd < new Date()) newRefEnd = new Date(); // Если подписка кончилась, даем 5 дней от сегодня
+                        if(newRefEnd < new Date()) newRefEnd = new Date();
                         newRefEnd.setDate(newRefEnd.getDate() + 5);
                         
-                        // Добавляем ему 5 дней в базу
                         await sb.from('clients').update({ sub_end_date: newRefEnd.toISOString().split('T')[0] }).eq('tg_id', refId);
                         
-                        // Отправляем радостное сообщение в ТГ
                         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
@@ -907,8 +907,6 @@
                             })
                         });
                     }
-                    
-                    // Удаляем реферала, чтобы не выдавать бонус дважды
                     updateData.referred_by = null;
                 }
             } else {
