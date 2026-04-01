@@ -17,6 +17,7 @@
 </head>
 <body class="bg-slate-50 font-sans min-h-screen text-slate-900 pb-24">
 
+    <!-- ШАПКА -->
     <header class="bg-white sticky top-0 z-[100] border-b p-4 flex justify-between items-center shadow-sm">
         <div>
             <h1 class="text-xl font-black text-green-600 italic tracking-tighter uppercase leading-none">ЧИСТОВЕРА</h1>
@@ -29,19 +30,21 @@
     </header>
 
     <main class="p-4">
+        <!-- ЭКРАН: ТЕХНИЧЕСКИЕ РАБОТЫ -->
         <div id="screen-maintenance" class="hidden h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in fade-in">
             <span class="text-6xl mb-6 animate-pulse">🛠</span>
             <h2 class="text-2xl font-black uppercase italic tracking-tighter text-slate-800 mb-2">Технические работы</h2>
             <p class="text-[11px] font-bold text-slate-500 uppercase">Бот временно остановлен для обновления системы. Пожалуйста, зайдите немного позже.</p>
         </div>
 
+        <!-- ЭКРАН 1: ВЫБОР ГОРОДА -->
         <div id="screen-city" class="hidden space-y-4 pt-10 text-center">
             <h2 class="text-2xl font-black uppercase italic tracking-tighter text-slate-800">Ваш город?</h2>
             <button onclick="pickCity('Магас')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏙 Магас</button>
             <button onclick="pickCity('Назрань')" class="w-full bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 font-bold text-lg active:scale-95 transition-all italic">🏡 Назрань</button>
         </div>
 
-        <!-- ЭКРАН 2: ВВОД АДРЕСА (ОБНОВЛЕНО С ЭТАЖОМ) -->
+        <!-- ЭКРАН 2: ВВОД АДРЕСА -->
         <div id="screen-address" class="hidden space-y-4 pt-4">
             <button onclick="backToCity()" class="text-slate-400 text-[10px] font-black uppercase italic tracking-widest mb-2">← Назад к городам</button>
             <h2 class="text-xl font-black uppercase tracking-tighter">Укажите адрес</h2>
@@ -60,6 +63,7 @@
             <button onclick="finishReg()" id="reg-btn" class="w-full bg-green-600 text-white p-5 rounded-2xl font-black shadow-xl uppercase mt-4 italic">Подтвердить адрес</button>
         </div>
 
+        <!-- ЭКРАН 3: ВЫБОР ТАРИФА -->
         <div id="screen-tariffs" class="hidden space-y-6 pt-6">
             <h2 class="text-2xl font-black text-center uppercase italic tracking-tighter">Выберите подписку</h2>
             <div onclick="selectTariff('daily', 750)" class="bg-white p-6 rounded-[2.5rem] border-2 border-green-500 shadow-xl active:scale-95 transition-all relative">
@@ -75,7 +79,7 @@
             </div>
         </div>
 
-        <!-- ГЛАВНАЯ -->
+        <!-- ГЛАВНАЯ (Home) -->
         <div id="tab-home" class="hidden space-y-4 animate-in fade-in duration-500">
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-50 relative">
                 <div class="flex justify-between items-start mb-4">
@@ -101,6 +105,7 @@
                 </div>
             </div>
 
+            <!-- Реферальная кнопка -->
             <div onclick="shareReferral()" class="bg-purple-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
                 <div>
                     <h3 class="text-lg font-black uppercase italic tracking-tighter">5 дней бесплатно</h3>
@@ -109,6 +114,7 @@
                 <span class="text-3xl">🎁</span>
             </div>
 
+            <!-- Магазин -->
             <div onclick="showTab('shop')" class="bg-blue-600 p-6 rounded-[2.5rem] text-white flex justify-between items-center shadow-xl active:scale-95 transition-all">
                 <div>
                     <h3 class="text-lg font-black uppercase italic tracking-tighter">Детские товары</h3>
@@ -118,6 +124,7 @@
             </div>
         </div>
 
+        <!-- ЭКРАН: МАГАЗИН -->
         <div id="tab-shop" class="hidden space-y-4 pt-2">
             <div class="flex justify-between items-center px-1">
                 <button onclick="showTab('home')" class="text-slate-400 text-[10px] font-black uppercase">← Назад</button>
@@ -134,6 +141,7 @@
             <div id="shop-items-container" class="grid grid-cols-2 gap-3 pb-24"></div>
         </div>
 
+        <!-- ЭКРАН: ПАНЕЛЬ КУРЬЕРА -->
         <div id="tab-courier" class="hidden space-y-6 pt-2 pb-24">
             <div class="bg-slate-900 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none text-slate-100">Рабочая панель<br><span class="text-[9px] text-slate-400">Курьер ЧистоВера</span></h2>
@@ -157,7 +165,7 @@
             </div>
         </div>
 
-        <!-- АДМИН ПАНЕЛЬ -->
+        <!-- ЭКРАН: АДМИН ПАНЕЛЬ -->
         <div id="tab-admin" class="hidden space-y-6 pb-24">
             <div class="bg-red-600 p-5 rounded-[2rem] text-white shadow-xl flex justify-between items-center">
                 <h2 class="text-sm font-black uppercase italic tracking-widest leading-none">Админ-панель <br><span class="text-[9px] opacity-60">Управление ЧистоВера</span></h2>
@@ -242,6 +250,7 @@
         </div>
     </div>
 
+    <!-- NAVBAR -->
     <nav id="navbar" class="hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t p-4 flex justify-around pb-10 z-50 shadow-2xl">
         <button onclick="showTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-slate-300 transition-all">
             <span class="text-2xl">🏠</span><span class="text-[9px] font-black uppercase italic">Главная</span>
@@ -259,10 +268,8 @@
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwcmVlamZmdHNwanFhcnRocGZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNzM4MDUsImV4cCI6MjA4Nzg0OTgwNX0.6u9FNjZLW3AVDY_RNLq4Dm8Yn4XC5JsI84aQlUKXI7c';
         const sb = supabase.createClient(S_URL, S_KEY);
 
-        // ⚠️ СПИСОК АДМИНОВ (через запятую)
+        // ⚠️ СПИСОК АДМИНОВ И КУРЬЕРОВ (ВСТАВЬ СВОИ ID ТУДА)
         const ADMIN_IDS = ['593064482', '8536326877'];
-        
-        // ⚠️ СПИСОК КУРЬЕРОВ (через запятую)
         const COURIER_IDS = ['ID_КУРЬЕРА_1', 'ID_КУРЬЕРА_2']; 
         
         const BOT_TOKEN = '8270034848:AAF9wQm0meVJ1jeflutjZfOO3OTG-_3QLfk';
@@ -278,11 +285,16 @@
 
         let systemPaused = false;
 
-        // ФУНКЦИЯ ДЛЯ УВЕДОМЛЕНИЯ ВСЕХ АДМИНОВ
-        function notifyAdmins(text) {
-            ADMIN_IDS.forEach(adminId => {
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(text)}`);
-            });
+        // --- УМНАЯ ФУНКЦИЯ УВЕДОМЛЕНИЙ АДМИНАМ ---
+        async function notifyAdmins(text) {
+            const promises = ADMIN_IDS.map(adminId => 
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: adminId, text: text })
+                })
+            );
+            await Promise.all(promises); // Ждем, пока все сообщения уйдут
         }
 
         async function init() {
@@ -379,7 +391,7 @@
             const h = document.getElementById('in-house').value;
             const f = document.getElementById('in-flat').value;
             const ent = document.getElementById('in-entrance').value;
-            const fl = document.getElementById('in-floor').value; // ЭТАЖ
+            const fl = document.getElementById('in-floor').value; 
             const int = document.getElementById('in-intercom').value;
 
             if(!s || !h) return tg.showAlert('Пожалуйста, заполните улицу и номер дома!');
@@ -387,7 +399,7 @@
             let fullAddress = `${s}, д.${h}`;
             if (f) fullAddress += `, кв.${f}`;
             if (ent) fullAddress += `, под.${ent}`;
-            if (fl) fullAddress += `, эт.${fl}`; // ДОБАВЛЯЕМ ЭТАЖ
+            if (fl) fullAddress += `, эт.${fl}`; 
             if (int) fullAddress += `, домофон: ${int}`;
 
             user.addr = fullAddress;
@@ -529,6 +541,7 @@
             }
         }
 
+        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ВЫВОЗА МУСОРА (С ЗАЩИТОЙ ОТ ПОТЕРИ ИНТЕРНЕТА) ---
         async function trashAction(isOut) {
             if(user.isExpired) return tg.showAlert("Ваша подписка закончилась. Пожалуйста, продлите её.");
 
@@ -537,18 +550,26 @@
                 return tg.HapticFeedback.notificationOccurred('error');
             }
 
-            const newClicks = isOut ? user.clicks + 1 : user.clicks - 1;
-            await sb.from('clients').update({ trash_out_today: isOut, weekly_clicks: newClicks }).eq('tg_id', user.id);
-            
-            user.clicks = newClicks;
-            updateTrashButtons(isOut);
-            
-            // Уведомляем всех админов
-            notifyAdmins(isOut ? `🔔 ВЫСТАВИЛ МУСОР:\n📍 ${user.addr}` : `❌ ОТМЕНА ВЫВОЗА:\n📍 ${user.addr}`);
-            
-            if(isOut) {
-                tg.HapticFeedback.notificationOccurred('success');
-                setTimeout(() => tg.close(), 1200);
+            try {
+                // Пытаемся отправить сообщение админам
+                const text = isOut ? `🔔 ВЫСТАВИЛ МУСОР:\n📍 ${user.addr}` : `❌ ОТМЕНА ВЫВОЗА:\n📍 ${user.addr}`;
+                await notifyAdmins(text);
+
+                // Если интернет есть и сообщение ушло - пишем в базу
+                const newClicks = isOut ? user.clicks + 1 : user.clicks - 1;
+                await sb.from('clients').update({ trash_out_today: isOut, weekly_clicks: newClicks }).eq('tg_id', user.id);
+                
+                user.clicks = newClicks;
+                updateTrashButtons(isOut);
+                
+                if(isOut) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    setTimeout(() => tg.close(), 1500); // Задержка для плавного закрытия
+                }
+            } catch (error) {
+                // Если связи нет
+                tg.HapticFeedback.notificationOccurred('error');
+                tg.showAlert("⚠️ Ошибка сети! Плохой интернет. Пожалуйста, убедитесь, что связь стабильна, и нажмите еще раз.");
             }
         }
 
@@ -614,16 +635,27 @@
             tg.HapticFeedback.impactOccurred('light');
         }
 
+        // --- ОБНОВЛЕННЫЙ ЗАКАЗ ИЗ МАГАЗИНА (С ЗАЩИТОЙ ОТ ПОТЕРИ ИНТЕРНЕТА) ---
         async function placeOrder() {
             if(!user.cart.length) return;
-            const names = user.cart.map(i => i.name).join(', ');
-            await sb.from('orders').insert({ client_tg_id: user.id, product_name: names });
             
-            notifyAdmins(`🛒 НОВЫЙ ЗАКАЗ!\n\n👤 От: ${user.name} (${user.addr})\n📦 Товары: ${names}\n\nКурьеры уже видят заказ в своей панели!`);
+            try {
+                const names = user.cart.map(i => i.name).join(', ');
+                const text = `🛒 НОВЫЙ ЗАКАЗ!\n\n👤 От: ${user.name} (${user.addr})\n📦 Товары: ${names}\n\nКурьеры уже видят заказ в своей панели!`;
+                
+                // Проверяем интернет - шлем админам
+                await notifyAdmins(text);
 
-            tg.showAlert('Заказ оформлен! Курьер возьмет его в работу.');
-            user.cart = []; document.getElementById('cart-count').innerText = '0';
-            toggleCart(); showTab('home');
+                // Записываем в базу
+                await sb.from('orders').insert({ client_tg_id: user.id, product_name: names });
+
+                tg.showAlert('Заказ оформлен! Курьер возьмет его в работу.');
+                user.cart = []; document.getElementById('cart-count').innerText = '0';
+                toggleCart(); showTab('home');
+
+            } catch (error) {
+                tg.showAlert("⚠️ Ошибка при оформлении заказа. Проверьте интернет-соединение и попробуйте еще раз.");
+            }
         }
 
         async function loadCourierData() {
@@ -753,6 +785,7 @@
             }
         }
 
+        // --- АДМИН ПАНЕЛЬ ---
         async function adminAddProduct() {
             const n = document.getElementById('adm-name').value, p = document.getElementById('adm-price').value, i = document.getElementById('adm-img').value, c = document.getElementById('adm-cat').value;
             if(!n || !p || !i) return alert('Заполните всё!');
